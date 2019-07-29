@@ -1,0 +1,152 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="auth/or" content="">
+    <link rel="icon" href="assets/img/basic/favicon.ico" type="image/x-icon">
+    <title>CHERT System Solution : Logistic</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'core/assets/css/app.css' %}">
+    <style>
+
+        .app{
+            background: #65261e;
+        }
+
+        .loader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #F5F8FA;
+            z-index: 9998;
+            text-align: center;
+        }
+
+        .plane-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+    </style>
+</head>
+
+<body class="light">
+<!-- Pre loader -->
+<div id="loader" class="loader">
+    <div class="plane-container">
+        <div class="preloader-wrapper small active">
+            <div class="spinner-layer spinner-blue">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+
+            <div class="spinner-layer spinner-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+
+            <div class="spinner-layer spinner-yellow">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+
+            <div class="spinner-layer spinner-green">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="app">
+<main>
+    <div id="primary" class="blue4 p-t-b-100 height-full responsive-phone">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <img src="{% static 'core/assets/img/logistic' %}" alt="">
+                </div>
+                <div class="col-lg-6 p-t-100">
+                    <div class="text-white">
+                        <h1>Welcome Back</h1>
+                        <p class="s-18 p-t-b-20 font-weight-lighter">Hi there! Welcome back signin now there is lot of
+                            new stuff waiting
+                            for you</p>
+                                {% if messages %} {% for message in messages %}
+                                <p class="mt-20 alert alert-{{ message.tags }}">
+                                    {% if 'safe' in message.tags %} {{ message|safe }} {% else %} {{ message }} {% endif %}
+                                </p>
+                                {% endfor %} {% endif %} 
+                    </div>
+                    <form action="{% url 'login' %}"  method="POST" >    
+                        {% csrf_token %}
+                        {% if next %}
+                            <input type="hidden" name="next" value="{{ next }}" />
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group has-icon"><i class="icon-envelope-o"></i>
+                                    <input name="username" type="email" class="form-control form-control-lg no-b"
+                                           placeholder="Email Address" required>
+                                           {% if form.username.errors %}
+                                             <span class=""> {{ form.username.errors }} </span>
+                                            {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group has-icon"><i class="icon-user-secret"></i>
+                                    <input name="password" type="password" class="form-control form-control-lg no-b"
+                                           placeholder="Password" required >
+                                           {% if form.password.errors %}
+                                           <span class=""> {{ form.password.errors }} </span>
+                                          {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <input type="submit" class="btn btn-success btn-lg btn-block" value="Let me enter">
+                                <p class="forget-pass text-white">Have you forgot your username or password ?</p>
+                                <a href='{% url 'password_reset' %}'> Change Password </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #primary -->
+</main>
+
+<!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+<div class="control-sidebar-bg shadow white fixed"></div>
+</div>
+<!--/#app -->
+<script src="{% static 'core/assets/js/app.js' %}"></script>
+</body>
+</html>

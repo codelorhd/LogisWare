@@ -1,0 +1,45 @@
+{% extends 'core/procurement/base.html' %}
+{% block content %}
+
+<!--Style Start 3-->
+        <div class="row text-white no-gutters no-m shadow">
+            <div class="col-lg-3">
+                <div class="green counter-box p-40">
+                    <div class="float-right">
+                        <span class="icon icon-list3 s-48"></span>
+                    </div>
+                    <div class="sc-counter s-36">{{ total_quotes }}</div>
+                    <h6 class="counter-title">Total Quotes</h6>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="blue1 counter-box p-40">
+                    <div class="float-right">
+                        <span class="icon icon-today s-48"></span>
+                    </div>
+                    <div class="sc-counter s-36">{{ todays_quotes }}</div>
+                    <h6 class="counter-title">Today's Quotes</h6>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="sunfollower counter-box p-40">
+                    <div class="float-right">
+                        <span class="icon icon-flight_land s-48"></span>
+                    </div>
+                    <div class="sc-counter s-36">{{ awaiting_arrival_quotes }}</div>
+                    <h6 class="counter-title">Awaiting Arrival</h6>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="strawberry counter-box p-40">
+                    <div class="float-right">
+                        <span class="icon icon-note-important2 s-48"></span>
+                    </div>
+                    <div class="sc-counter s-36">{{ unattended_quptes }}</div>
+                    <h6 class="counter-title">Unattended</h6>
+                </div>
+            </div>
+        </div>
+        <!--Style End 3-->
+
+{% endblock %}

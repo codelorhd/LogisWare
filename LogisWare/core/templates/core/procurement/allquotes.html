@@ -1,0 +1,158 @@
+{% extends 'core/procurement/base.html' %} {% block content %}
+
+{% block styles %}
+  
+    <style>
+        .dataTables_wrapper{
+            height: 1800px !important;
+        }
+    </style>
+
+{% endblock styles %}
+
+<table
+  class="table table-bordered table-hover data-tables"
+  data-options='{"searching":true}'
+>
+  <thead>
+    <tr>
+      <th>Quote Number</th>
+      <th>Client Name</th>
+      <th>ETA</th>
+      <th>Status</th>
+      <th>Date Uploaded</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for quote in quotes  %}
+      <tr>
+          <td> {{ quote.quote_number }} </td>
+          <td> {{ quote.client.name }} </td>
+          <td> {{ quote.date_eta|date:"D d M Y" }} </td>
+          <td class="text-center" > 
+              <span class="badge 
+              {% if quote.status == 'APRSNG' %}
+              badge-dark
+
+              {% elif quote.status == 'AWAARIVAL' %}
+              badge-info
+              
+              {% elif quote.status == 'ARRIVED' %}
+              badge-success
+         
+              {% elif quote.status == 'PENDING_FINANCE' %}
+              badge-primary
+
+              {% elif quote.status == 'NOTPAID_DELIVER' %}
+              badge-warning
+          
+              {% elif quote.status == 'PAID_DELIVER' %}
+              badge-warning
+     
+              {% elif quote.status == 'AWAITDELIVERY' %}
+              badge-warning
+     
+              {% elif quote.status == 'DELIVERED' %}
+              badge-success
+
+              {% elif quote.status == 'NOTDELIVERED' %}
+              badge-danger
+
+              {% endif %}">{{ quote.get_status_display }}</span>
+          </td>
+          <td> {{ quote.date_uploaded|date:"D d M Y" }} </td>
+          <td>
+
+<div  class="dropdown">
+  <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Quote Actions
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" data-toggle="modal" data-target="#view-quote{{ quote.id }}"
+                  href="#view-quote{{ quote.id }}" >View Quote</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'PRSNG' %}" >Status: Processing</a>
+    <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'AWAARIVAL' %}" >Status: Awaiting Delivery</a>
+    <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'ARRIVED' %}">Status: Items Arrived</a>
+  </div>
+</div>
+              </td>
+
+            <!-- Modal -->
+            <div class="modal fade" id="view-quote{{ quote.id }}" tabindex="-1" role="dialog" aria-labelledby="view-quote{{ quote.id }}Label" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="view-quote{{ quote.id }}"> Quote Number: {{ quote.quote_number }} <span class="badge 
+                      {% if quote.status == 'APRSNG' %}
+                      badge-dark
+        
+                      {% elif quote.status == 'AWAARIVAL' %}
+                      badge-info
+                      
+                      {% elif quote.status == 'ARRIVED' %}
+                      badge-success
+                 
+                      {% elif quote.status == 'PENDING_FINANCE' %}
+                      badge-primary
+        
+                      {% elif quote.status == 'NOTPAID_DELIVER' %}
+                      badge-warning
+                  
+                      {% elif quote.status == 'PAID_DELIVER' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'AWAITDELIVERY' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'DELIVERED' %}
+                      badge-success
+        
+                      {% elif quote.status == 'NOTDELIVERED' %}
+                      badge-danger
+        
+                      {% endif %}">{{ quote.get_status_display }}</span> </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    
+                    <div class="form-group">
+                      <label>Client Details</label> <br />
+                      <label> {{ quote.client.name }} </label> <br />
+                      <label> {{ quote.client.phone_one }} </label> <br />
+                      <label> {{ quote.client.email }} </label> <br />
+                      <hr />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Delivery</label><br />
+                      <label>{{ quote.delivery.delivery_location }}</label><br />
+                      <label>{{ quote.delivery.delivery_state }}</label><br />
+                      <label>Delivery Type</label> <br />
+                      <label>{{ quote.delivery.get_delivery_type_display }}</label>
+                      {% if quote.delivery.delivered_by %}
+                        <label>Delivered By</label><br />
+                        <label>{{ quote.delivery.delivered_by }}</label> <br />
+                        <label>Date Delivered</label><br />
+                        <label>{{ quote.delivery.date_delivered|date:"D d M Y" }}</label>
+                      {% endif %}
+                    </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+      </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+{% endblock %}

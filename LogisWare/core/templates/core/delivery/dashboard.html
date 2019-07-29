@@ -1,0 +1,270 @@
+{% extends 'core/delivery/base.html' %} {% load static %}
+
+{% block styles %}
+
+    <style>
+        #print_today{
+            display: none;
+        }
+
+        #print_tomorrow{
+            display: none;
+        }
+</style>
+
+<link href="{% static 'core/assets/fullcalendar/packages/core/main.css' %}" rel='stylesheet' />
+<link href="{% static 'core/assets/fullcalendar/packages/daygrid/main.css' %}" rel='stylesheet' />
+
+{% endblock styles %}
+
+{% block content %}
+
+<!--Style Start 3-->
+        <div class="row text-white no-gutters no-m shadow">
+            <div class="col-lg-3">
+                <div class="green counter-box p-40">
+                    <div class="float-right">
+                        <span class="icon icon-list3 s-48"></span>
+                    </div>
+                    <div class="sc-counter s-36">{{ total_deliveries }}</div>
+                    <h6 class="counter-title">Total Delivered</h6>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="blue1 counter-box p-40">
+                    <div class="float-right">
+                        <span class="icon icon-today s-48"></span>
+                    </div>
+                    <div class="sc-counter s-36">{{ todays_deliveries }}</div>
+                    <h6 class="counter-title">Today's Delivery</h6>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="sunfollower counter-box p-40">
+                    <div class="float-right">
+                        <span class="icon icon-bus s-48"></span>
+                    </div>
+                    <div class="sc-counter s-36">{{ awaiting_arrival_quotes }}</div>
+                    <h6 class="counter-title">Awaiting Delivery</h6>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="strawberry counter-box p-40">
+                    <div class="float-right">
+                        <span class="icon icon-note-important2 s-48"></span>
+                    </div>
+                    <div class="sc-counter s-36">{{ unattended_deliveries }}</div>
+                    <h6 class="counter-title">Not Delivered</h6>
+                </div>
+            </div>
+        </div>
+        <!--Style End 3-->
+
+
+        <div class="tab-pane animated fadeInUpShort show active go" id="v-pills-1">
+                <div class="row my-3">
+
+                    <div class="col-md-6">
+                        <div class="counter-box white r-5 p-3">
+
+                        <table
+                        class="table table-bordered table-hover data-tables"
+                        data-options='{"searching":false}'
+                        >
+                        <label style="margin-left: 18px;" > <strong> Today's Deliveries ({{ now |date:"d/m/Y" }})  </strong> </label> 
+                        <button onclick="printPage('print_today')" class="btn btn-danger" style="float: right" >Print Deliveries</button>
+                        <hr />
+                        <thead>
+                            <tr>
+                            <th>Quote Number</th>
+                            <th>Location </th>
+                            <th>Client Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quote in todays_deliveries_items %}
+                                <tr>
+                                    <td> {{ quote.quote_number }} </td>
+                                    <td> {{ quote.delivery.delivery_location }} </td>
+                                    <td> {{ quote.client.name }} </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card no-r no-b shadow">
+                            <div class="card-body p-0">
+                                <div id='logisCalendar'></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% comment %} <div class="col-md-6">
+                        <div class="counter-box white r-5 p-3">
+
+                        <table
+                        class="table table-bordered table-hover data-tables"
+                        data-options='{"searching":false}'
+                        >
+                        <label style="margin-left: 18px;" > <strong> Tomorrow's Deliveries ({{ tomorrow |date:"d/m/Y" }}) </strong> </label> 
+                        <button onclick="printPage('print_tomorrow')" class="btn btn-danger" style="float: right" >Print Deliveries</button>
+                        <hr />
+                        <thead>
+                            <tr>
+                            <th>Quote Number</th>
+                            <th>Location </th>
+                            <th>Client Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quote in tomorrow_deliveries_items %}
+                                <tr>
+                                    <td> {{ quote.quote_number }} </td>
+                                    <td> {{ quote.delivery.delivery_location }} </td>
+                                    <td> {{ quote.client.name }} </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+
+                        </div>
+                    </div> {% endcomment %}
+
+                </div>
+
+
+                <div id="print_today">
+                        <table
+                        >
+                        <label> {{ user.name }} </label> <label style="margin-left: 20px;" > {{ todays_deliveries }} Item(s) </label>
+                        <label style="margin-left: 18px; float: right;" > <strong> Date: ({{ now |date:"D d M Y" }}) </strong> </label> 
+                        <hr />
+                        <thead>
+                            <tr>
+                            <th>Quote Number</th>
+                            <th>Location </th>
+                            <th>Type</th>
+                            <th>Client  </th>
+                            <th>ETA</th>
+                            <th>Delivered?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quote in todays_deliveries_items %}
+                                <tr>
+                                    <td> {{ quote.quote_number }} </td>
+                                    <td> {{ quote.delivery.delivery_location }} <br /> {{ quote.delivery.delivery_state }} </td>
+                                    <td> {{ quote.delivery.delivery_type }} </td>
+                                    <td> {{ quote.client.name }}<br /> {{ quote.client.phone_one }}<br /> {{ quote.client.email }} </td>
+                                    <td> {{ quote.date_eta|date:"D d M Y" }} </td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+
+                <div id="print_tomorrow">
+                        <table
+                        >
+                        <label> {{ user.name }} </label> <label style="margin-left: 20px;" > {{ todays_deliveries }} Item(s) </label>
+                        <label style="margin-left: 18px; float: right;" > <strong> Date: ({{ tomorrow |date:"D d M Y" }}) </strong> </label> 
+                        <hr />
+                        <thead>
+                            <tr>
+                            <th>Quote Number</th>
+                            <th>Location </th>
+                            <th>Type</th>
+                            <th>Client  </th>
+                            <th>ETA</th>
+                            <th>Delivered?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quote in tomorrow_deliveries_items %}
+                                <tr>
+                                    <td> {{ quote.quote_number }} </td>
+                                    <td> {{ quote.delivery.delivery_location }} <br /> {{ quote.delivery.delivery_state }} </td>
+                                    <td> {{ quote.delivery.delivery_type }} </td>
+                                    <td> {{ quote.client.name }}<br /> {{ quote.client.phone_one }}<br /> {{ quote.client.email }} </td>
+                                    <td> {{ quote.date_eta|date:"D d M Y" }} </td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+
+        
+
+            </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src='{% static "core/assets/fullcalendar/packages/core/main.js" %}'></script>
+<script src='{% static "core/assets/fullcalendar/packages/daygrid/main.js" %}'></script>
+<script>
+
+    function printPage(id) {
+        var html="<html>" +
+                '<style type="text/css">' +
+                'table th, table td {' +
+                'border:1px solid #000;' +
+                'padding:0.5em;' +
+                '}' +
+                "#" + id + "{ display: block !important; }" +
+                '</style>';
+
+            console.log( html );
+
+        html+= document.getElementById(id).outerHTML;
+
+        html+="</html>";
+
+        var printWin = window.open('');
+        printWin.document.write(html);
+        printWin.document.close();
+        printWin.focus();
+        printWin.print();
+        printWin.close();
+    }
+
+    var deliveries = [];
+    var index = 0;
+    var date = 0;
+    var quotes = [];
+    quotes = 
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('logisCalendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+            navLinks: true,
+            navLinkDayClick: function(date, jsEvent) {
+                console.log('day', date.toISOString());
+                console.log('coords', jsEvent.pageX, jsEvent.pageY);
+            },
+            events: {{ deliverables | safe }},
+            evsents: [
+                {
+                    title  : '0 Delivery',
+                    start  : '2019-07-25',
+                    color: '#ff9f89'
+                },
+            ],
+            plugins: [ 'dayGrid', 'timeGrid', 'list', 'interaction' ] // an array of strings!
+    });
+
+    calendar.render();
+    });
+
+</script>
+
+{% endblock scripts %}

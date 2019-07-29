@@ -1,0 +1,139 @@
+{% extends 'core/sales/base.html' %}
+{% block content %}
+
+
+    <div class="blue accent-2 p-5">
+        <canvas data-chart="line" height="300" data-dataset="[
+                                                            {{ months_data }},
+                                                
+                                                            ]" data-labels="['January',
+                                                            'February',
+                                                            'March',
+                                                            'April',
+                                                            'May',
+                                                            'June',
+                                                            'July ',
+                                                            'August',
+                                                            'September',
+                                                            'October',
+                                                            'November',
+                                                            'December',]" data-dataset-options="[
+                                                            {   label:'Done Deals',
+                                                                fill: false,
+                                                              
+                                                                backgroundColor: '#fff',
+                                                                borderColor: 'rgba(255,255,255,0.5)',
+                                                                pointBorderColor: '#fff',
+                                                                pointBackgroundColor: '#4285f4',
+                                                                pointBorderWidth: '0',
+                                                                pointStyle: 'circle',
+                                                                borderWidth: 2,
+                                                                borderJoinStyle: 'miter',
+                                                                pointHoverBackgroundColor: '#fff',
+                                                                pointHoverBorderColor: '#fff',
+                                                                pointHoverBorderWidth: 1,
+                                                                pointRadius: 3,
+                                                                lineTension:0,
+                                                            },
+                                                            ]" data-options="{
+                                                                    maintainAspectRatio: false,
+                                                                    legend: {
+                                                                        display: false,
+                                                                        labels: {
+                                                                            fontColor: 'white',
+                                                                        
+                                                                        }
+                                                                        
+                                                                    },
+                                                        
+                                                                    scales: {
+                                                                        xAxes: [{
+                                                                            display: true,
+                                                                            ticks: {
+                                                                                fontColor: 'rgba(255,255,255,0.5)',
+                                                                              
+                                                                            },
+                                                                            gridLines: {
+                                                                                display: false,
+                                                                            }
+
+                                                                        }],
+                                                                        yAxes: [{
+                                                                            display: true,
+                                                                            ticks: {
+                                                                                fontColor: 'rgba(255,255,255,0.5)',
+                                                                                stepSize: 20,
+                                                                              
+                                                                            },
+                                                                            gridLines: {
+                                                                                zeroLineColor: 'rgba(255,255,255,0.1)',
+
+                                                                                color: 'rgba(255,255,255,0.1)',
+
+                                                                            }
+                                                                        }]
+                                                        
+                                                                    },
+                                                                    elements: {
+                                                                        line: {
+                                                                            tension: 0.4,
+                                                                            borderWidth: 1
+                                                                        },
+                                                                        point: {
+                                                                            radius: 2,
+                                                                            hitRadius: 10,
+                                                                            hoverRadius: 6,
+                                                                            borderWidth: 4,
+                                                                         
+                                                                            
+                                                                        }
+                                                                    }
+                                                                }">
+        </canvas>
+    </div>
+        <div class="container-fluid relative animatedParent animateOnce">
+        <div class="tab-content pb-3" id="v-pills-tabContent">
+            <!--Today Tab Start-->
+            <div class="tab-pane animated fadeInUpShort show active" id="v-pills-1">
+                <div class="row my-3">
+                    <div class="col-md-4">
+                        <div class="counter-box white r-5 p-3">
+                            <div class="p-4">
+                                <div class="float-right">
+                                    <span class="icon icon-note-list text-light-blue s-48"></span>
+                                </div>
+                                <div class="counter-title">Total Quotes</div>
+                                <h5 class="sc-counter mt-3">{{ total_quotes }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="counter-box white r-5 p-3">
+                            <div class="p-4">
+                                <div class="float-right">
+                                    <span class="icon icon-check text-light-blue s-48"></span>
+                                </div>
+                                <div class="counter-title ">Done Deals</div>
+                                <h5 class="sc-counter mt-3">{{ done_deals }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="counter-box white r-5 p-3">
+                            <div class="p-4">
+                                <div class="float-right">
+                                    <span class="icon icon-inbox-document-text text-light-blue s-48"></span>
+                                </div>
+                                <div class="counter-title">Pending Items</div>
+                                <h5 class="sc-counter mt-3">{{ pending_items }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Today Tab End-->
+        </div>
+    </div>
+
+
+{% endblock content %}

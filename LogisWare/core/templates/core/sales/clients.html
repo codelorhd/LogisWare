@@ -1,0 +1,29 @@
+{% extends 'core/sales/base.html' %} {% block content %}
+
+<div style="margin-left: 15px;">
+  Quote Number: <strong>{{ quote }}</strong>
+  <br />
+  <br />
+</div>
+<table
+  class="table table-bordered table-hover data-tables"
+  data-options='{"searching":true}'
+>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email Address</th>
+      <th>Phone Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for client in clients  %}
+        <tr>
+            <td> {{ client.name }} </td>
+            <td> {{ client.email }} </td>
+            <td> {{ client.phone_one }} </td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}

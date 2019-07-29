@@ -1,0 +1,72 @@
+{% autoescape off %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <style>
+      body {
+        color: #868ba1;
+        background-color: #f0f2f7;
+      }
+      .body-text {
+        width: 80%;
+        margin: 0 auto;
+      }
+
+      .activate-button {
+        color: white !important;
+        background-color: #1b84e6;
+        font-weight: 700;
+        padding: 10px;
+        text-decoration: none;
+        border: 1px solid #1b84e6;
+        border-radius: 5px;
+      }
+
+      .welcome-onboard11 {
+        background-color: #2f4f4f;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      .logo {
+        color: #1b84e6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="body-text">
+      <h2 class="logo">CHERT Logistic System</h2>
+      <p class="welcome-onboard">
+        <strong>Welcome On Board!</strong>
+        <br />
+        <strong>{{ user.name }}</strong>
+      </p>
+
+      {% if password %}
+        <p>
+          An account has been created for you, kindly login with this login details. 
+          <br /><br />
+          <label>Email Address: {{ user.email }}</label>
+          <br />
+          <label>Password: {{ password }}</label> <br />
+          <label style="color: red" ><strong> Please change your password immediately you sign in.</strong> </label>
+          <br />
+        </p>
+      {% endif %}
+
+      <p class="welcome-onboard">
+      Best Regards.
+        <strong>
+          {{ admin.name }}<br />
+          Head of Delivery
+        </strong>
+      </p>
+    </div>
+  </body>
+</html>
+
+{% endautoescape %}

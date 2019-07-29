@@ -1,0 +1,32 @@
+        <ul class="sidebar-menu">
+            <li class="header"><strong>MAIN NAVIGATION</strong></li>
+            <li class="treeview"><a href="{% url 'dashboard_delivery' %}">
+                <i class="icon icon-sailing-boat-water purple-text s-18"></i> <span>Dashboard</span>
+            </a></li>
+
+            <li class="treeview"><a href="#">
+                <i class="icon icon icon-package blue-text s-18"></i>
+                <span>Deliveries</span>
+                <span class="badge r-3 badge-primary pull-right">{{ total_quotes }}</span>
+            </a>
+                <ul class="treeview-menu">
+                    <li><a href="{% url 'all_deliveries' %}"><i class="icon icon-circle-o"></i>All Deliveries</a>
+                    </li>
+                </ul>
+            </li>
+
+            {% if user.is_super_admin == True %}
+            <li class="treeview"><a href="{% url 'dashboard_delivery_users' %}">
+                <i class="icon icon-users blue-text s-18"></i> <span>Users</span>
+            </a></li>
+            {% endif %}
+            </li>
+        </ul>
+
+
+        {% comment %} See all Quotes
+        Today's Quote
+        Processed Quotes/Awaiting Arrival
+        Pending Quotes
+        Arrived Quotes
+        Mark Quote Arrived and Processed {% endcomment %}

@@ -1,0 +1,95 @@
+{% extends 'core/delivery/base.html' %} {% block content %}
+
+        <div class="tab-pane animated fadeInUpShort show active go" id="v-pills-1">
+                <div class="row my-3">
+
+
+                        <div class="col-md-8">
+                                <div class="counter-box white r-5 p-3">
+                                <strong><h5>Existing Users</h5></strong>
+                                        
+                                    <table class="table table-bordered table-hover data-tables"
+                                    data-options='{"searching":true}'>
+                                    <thead>
+                                        <tr>    
+                                            <th>Name</th>
+                                            <th>Email Address</th>
+                                            <th>Last Login</th>
+                                            <th>Active Status</th>
+                                            <th>Actions</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for one_user in users  %}
+                                          <tr>
+                                              <td>{{ one_user.name }}</td>
+                                              <td>{{ one_user.email }}</td>
+                                              <td>{{ one_user.last_login|date:"D d M Y H:i:s" }}</td>
+                                              <td>
+                                            {% if one_user.is_active %}
+                                                <span class="badge badge-primary">Active </span>
+                                            {% else %}
+                                                <span class="badge badge-danger">In Active </span>
+                                            {% endif %}
+                                               </td>
+                                              <td>
+
+                                                    <div  class="dropdown">
+                                                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                              User Actions
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            {% if one_user.is_active %}
+                                                              <a class="dropdown-item" href="{% url 'deactivate_user' one_user.id %}" >Deactivate User</a>
+                                                            {% else %}
+                                                              <a class="dropdown-item" href="{% url 'activate_user' one_user.id %}" >Activate User</a>
+                                                            {% endif %}
+                                                              <!-- <div class="dropdown-divider"></div> -->
+                                                              <!-- <a style="background:red; color: white;" class="dropdown-item" href="" >Delete User</a> -->
+                                                            </div>
+                                                          </div>
+
+                                              </td>
+                                          </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                        <div class="col-md-4">
+                                <div class="counter-box white r-5 p-3">
+                                <strong><h5>Create a new User</h5></strong>
+                            <form action="{% url 'create_new_user' %}" method="POST" >
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input name="name" class="form-control" placeholder="Name" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input name="email" class="form-control" placeholder="Email Address" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>User Type</label>
+                                    <select name="user_type" class="form-control">
+                                        <option value="SALES" >Sales Team</option>
+                                        <option value="PROCUREMENT" >Procurement Team</option>
+                                        <option value="DELIVERY" >Delivery Team</option>
+                                    </select>
+                                </div>
+                            
+                                <div class="form-group">
+                                        <button class="btn btn-primary">Create New User</button>
+                                    </div>
+                            </form>
+                        </div>
+
+                </div>
+        </div>
+
+{% endblock %}

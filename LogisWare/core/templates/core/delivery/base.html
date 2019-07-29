@@ -1,0 +1,26 @@
+{% extends 'core/mainbase.html' %}
+
+{% block side_menu %}
+
+<{% include "core/delivery/side-menu.html" %}
+
+{% endblock side_menu %}
+
+
+{% block dashboad_type %}
+
+    <div class="navbar navbar-expand d-flex justify-content-between navbar-dark bd-navbar blue accent-2 ">
+        <div class="relative">
+            <div class="d-flex">
+                <div>
+                    <a href="#" data-toggle="offcanvas" class="paper-nav-toggle pp-nav-toggle">
+                        <i></i>
+                    </a>
+                </div>
+                <div>
+                    <h1 class="nav-title text-white">Delivery Dashboard</h1>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+        <ul class="sidebar-menu">
+            <li class="header"><strong>MAIN NAVIGATION</strong></li>
+            <li class="treeview"><a href="{% url 'dashboard_sales' %}">
+                <i class="icon icon-sailing-boat-water purple-text s-18"></i> <span>Dashboard</span>
+            </a>
+            </li>
+            <li class="treeview"><a href="#">
+                <i class="icon icon icon-package blue-text s-18"></i>
+                <span>Quotes</span>
+                <span class="badge r-3 badge-primary pull-right">{{ total_quotes }}</span>
+            </a>
+                <ul class="treeview-menu">
+                    <li><a href="{% url 'all_quotes_sales' %}"><i class="icon icon-circle-o"></i>All Quotes</a>
+                    </li>
+                    <li><a href="{% url 'add_quotes_sales' %}"><i class="icon icon-add"></i>Add
+                        Quotes </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview"><a href="#"><i class="icon icon-account_box light-green-text s-18"></i>Clients<i
+                    class="icon icon-angle-left s-18 pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="{% url 'my_clients_sales' %}"><i class="icon icon-circle-o"></i>My Clients</a>
+                    </li>
+                </ul>
+            </li>
+            
+        </ul>

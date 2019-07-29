@@ -1,0 +1,258 @@
+{% extends 'core/sales/base.html' %}{% block content %}
+
+
+
+  <form id="submit_data" method="POST" action="{% url 'insert_quote' %}">
+    {% csrf_token %}
+
+
+
+
+      <!-- <div class="form-group">
+        <button id="save_quote" type="submit" class="btn btn-danger">
+          Save Quote
+        </button>
+      </div> -->
+
+      <div class="row">
+        <div class="col-md-8 offset-md-2 ">
+          <div class="card">
+            <div class="card-body b-b">
+              <p><strong>New Quote</strong></p>
+              <div class="form-group focused">
+                <label for="quote_number"> Quote Number * </label>
+                <input
+                  required
+                  id="quote_number"
+                  name="quote_number"
+                  autocomplete="off"
+                  class="form-control form-control-lg"
+                  type="text"
+                  placeholder="Quote Number"
+                />
+              </div>
+
+              <hr />
+
+              <div class="form-group focused">
+                <label> Client Contact Person </label> <br />
+
+                <label for="quote_number"> Name * </label>
+                <input
+                  required
+                  id="quote_number"
+                  autocomplete="off"
+                  name="contact_name"
+                  class="form-control form-control-lg"
+                  type="text"
+                  placeholder="Name"
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Mobile Number 1 * </label>
+                <input
+                  autocomplete="off"
+                  name="phone_one"
+                  required
+                  class="form-control form-control-lg"
+                  type="number"
+                  maxlength="1"
+                  placeholder="Mobile Number"
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Email Address </label>
+                <input
+                  autocomplete="off"
+                  type="email"
+                  name="email"
+                  class="form-control form-control-lg"
+                  placeholder="Email Address"
+                />
+              </div>
+              <div class="form-group">
+                <label>ETA * </label>
+                <input
+                  autocomplete="off"
+                  type="date"
+                  name="eta"
+                  class="form-control form-control-lg"
+                />
+              </div>
+
+              <hr />
+
+              <div class="form-group">
+                <label>Delivery Type * </label>
+                <select class="form-control" name="delivery_type">
+                  <option value="PICK_UP">Pick Up</option>
+                  <option value="DELIVER">We Deliver</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Delivery Location * </label>
+                <input
+                  name="delivery_location"
+                  class="form-control"
+                  value="CHERT SYSTEM SOLUTIONS"
+                />
+              </div>
+
+              <div class="form-group">
+    email = models.CharField(max_length=255, null=True, blank=True)
+    <label>Delivery State * </label>
+                <select name="delivery_state" class="form-control">
+                  {% for state in states  %}
+                    <option value="{{ state.id }}"
+                    {% if "Lagos" in state.name %}
+                      selected
+                    {% endif %}
+                    > {{ state }} </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-danger">Save Quote</button>
+              </div>
+
+            </div>
+          </div>
+          
+        </div>
+      </div>
+  </form>
+
+{% endblock %} {% block scripts %}
+{% comment %} <script>
+  var item_count = 0;
+  var quote_item_availables = [];
+
+  $(document).ready(function() {
+    $("#add_quote_item").on("click", function() {
+      var part_number = $("#part_number").val();
+      var description = $("#description").val();
+      var quantity = $("#quantity").val();
+      var unit_price = $("#unit_price").val();
+
+      if (
+        part_number.length == 0 ||
+        description.length == 0 ||
+        quantity.length == 0 ||
+        quantity < 1 ||
+        unit_price.length == 0 ||
+        unit_price < 1
+      ) {
+        alert("Please supply all the form data");
+        return;
+      }
+
+      var index_to_be_used = 0;
+      var data_edit = $(this).attr("data-edit");
+
+      if (data_edit == false || data_edit == undefined) {
+        item_count = item_count + 1;
+        index_to_be_used = item_count;
+      } else {
+        index_to_be_used = $(this).attr("index_to_edit");
+        $(this).attr("index_to_edit", 0);
+        $(this).text("Add Item");
+        $(this).attr("data-edit", false);
+      }
+
+      var item =
+        "<td></td><td>" +
+        part_number +
+        "</td><td><a data-index='" +
+        index_to_be_used +
+        "' href='javascript:void(0)' class='btn btn-danger delete-item' > <i class='icon-delete'></i> </a><a data-index='" +
+        index_to_be_used +
+        "' href='javascript:void(0)' class='btn btn-info edit-item' > <i class='icon-edit'></i> </a></td> <input name='part_numbers[]' value='" +
+        part_number +
+        "' type='hidden' />  <input name='descriptions[]' value='" +
+        description +
+        "' type='hidden' /> <input name='quantities[]' value='" +
+        quantity +
+        "' type='hidden' /> <input name='unit_prices[]' value='" +
+        unit_price +
+        "' type='hidden' />";
+
+      if (data_edit == false || data_edit == undefined) {
+        var table_body_data = $(".table_body").html();
+        var tr_value =
+          "<tr id='item" +
+          index_to_be_used +
+          "'>" +
+          item +
+          "</tr>" +
+          table_body_data;
+        $(".table_body").html(tr_value);
+        console.log(tr_value);
+      } else {
+        $("#item" + index_to_be_used).html(item);
+      }
+
+      loadActionEvents(index_to_be_used);
+
+      $("#unit_price").val("");
+      $("#quantity").val("");
+      $("#description").val("");
+      $("#part_number").val("");
+
+      var storage_data = {
+        part_number: part_number,
+        description: description,
+        quantity: quantity,
+        unit_price: unit_price
+      };
+
+      localStorage.setItem(
+        "quote-item" + index_to_be_used,
+        JSON.stringify(storage_data)
+      );
+      quote_item_availables.push(true);
+      console.log(quote_item_availables);
+
+      if (quote_item_availables.length > 0) {
+        $("#part_number").attr("required", false);
+      }
+    });
+
+    function loadActionEvents(index) {
+      $(".edit-item").on("click", function() {
+        var selected_index = $(this).attr("data-index");
+        $("#add_quote_item").attr("data-edit", true);
+        $("#add_quote_item").attr("index_to_edit", selected_index);
+        $("#add_quote_item").text("Update Item");
+
+        var itemSelected = $("#item" + selected_index);
+
+        var quote_item = JSON.parse(
+          localStorage.getItem("quote-item" + selected_index)
+        );
+
+        var part_number = $("#part_number").val(quote_item.part_number);
+        var description = $("#description").val(quote_item.description);
+        var quantity = $("#quantity").val(quote_item.quantity);
+        var unit_price = $("#unit_price").val(quote_item.unit_price);
+      });
+
+      $(".delete-item").on("click", function() {
+        var selected_index = $(this).attr("data-index");
+        var itemSelected = $("#item" + selected_index).remove();
+        quote_item_availables.pop();
+        console.log(quote_item_availables);
+
+        localStorage.removeItem("quote-item" + selected_index);
+
+        if (quote_item_availables.length == 0) {
+          $("#part_number").attr("required", true);
+        }
+      });
+    }
+  });
+</script> {% endcomment %}
+{% endblock scripts %}
