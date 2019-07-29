@@ -261,6 +261,7 @@ def dashboard_delivery(request):
         date_eta__isnull=False
     )
 
+    print(all_deliverable_quotes.count())
     current_date = None
     deliverables = []
     deliverables_event = []
@@ -270,10 +271,10 @@ def dashboard_delivery(request):
     dates_worked = []
     for quote in all_deliverable_quotes:
         date_items = date_items + 1
-        if date_items > 2:
-            delivery_sring = " Deliveries"
-        else:
-            delivery_sring = " Delivery"
+        # if date_items > 2:
+        #     delivery_sring = " Deliveries"
+        # else:
+        delivery_sring = " Delivery"
 
         day = str(quote.date_eta.day)
         month = str(quote.date_eta.month)
@@ -283,31 +284,45 @@ def dashboard_delivery(request):
 
         date_format = year + "-" + month + "-" + day
 
-        item = {
-            'title': str(date_items) + delivery_sring,
-            'start': date_format
-        }
+        date_string = str(quote.date_eta.year) + "" + \
+            str(quote.date_eta.month) + "" + str(quote.date_eta.day)
+        color = "blue"
+        if timezone.now() > quote.date_eta:
+            color = "red"
 
-        if dates_worked.index(quote.date_eta) == False:
-            deliverables_event.append(item)
-            current_date = quote.date_eta
-            dates_worked.append(quote.date_eta)
-        else:
-            index = dates_worked.index(quote.date_eta)
-            deliverables_event[index] = {
-                'title': 
+        try:
+            index = dates_worked.index(date_string)
+            item = deliverables_event[index]
+            new_item = {
+                "title": str(item["count"] + 1) + delivery_sring,
+                "start": item['start'],
+                "count": item["count"] + 1,
+                "color": color
+            }
+            deliverables_event[index] = new_item
+        except ValueError:
+
+            item = {
+                'title': str(1) + delivery_sring,
+                'start': date_format,
+                "count": date_items,
+                "color": color
             }
 
-            stopped here
-
-        if current_date != quote.date_eta:
-            print(current_date == quote.date_eta)
-            print(quote.date_eta)
-
-            date_items = 0
             deliverables_event.append(item)
             current_date = quote.date_eta
-            index = index + 1
+            dates_worked.append(date_string)
+
+        print(deliverables_event)
+
+        # if current_date != quote.date_eta:
+        #     print(current_date == quote.date_eta)
+        #     print(quote.date_eta)
+
+        #     date_items = 0
+        #     deliverables_event.append(item)
+        #     current_date = quote.date_eta
+        #     index = index + 1
 
     import json
     deliverables_event = json.dumps(deliverables_event)
