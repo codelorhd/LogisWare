@@ -124,14 +124,20 @@ LOGIN_REDIRECT_URL = 'login_success'
 LOGIN_URL = "login"
 
 WELCOME_NEW_USER_EMAIL = 'LogisWare Account Information <noreply@chert.ng>'
-ADMIN_EMAIL_ADDRESS = "admin@chert.ng"
+ADMIN_EMAIL_ADDRESS = "admchertlogiswarein@gmail.com"
 
 TIME_ZONE = 'Africa/Lagos'
 USE_TZ = True
 
-EMAIL_HOST_USER = "logistic@chert.ng"
-EMAIL_HOST_PASSWORD = ''
-DEFAULT_FROM_EMAIL = "logistic@chert.ng"
+# EMAIL_HOST_USER = "chertlogisware@gmail.com"
+# EMAIL_HOST_PASSWORD = 'chertlogisware_2019'
+# DEFAULT_FROM_EMAIL = "chertlogisware@gmail.com"
+
+EMAIL_HOST_USER = "regnifymessages@gmail.com"
+EMAIL_HOST_PASSWORD = 'regnify_2_0_1_9_messages'
+DEFAULT_FROM_EMAIL = "regnifymessages@gmail.com"
 
 
-mysql_root: is82k2kdjd82j2jj
+#mysql_root: is82k2kdjd82j2
+
+#logisware[]2019

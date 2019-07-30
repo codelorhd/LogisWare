@@ -8,7 +8,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'logisdb',
         'USER': 'root',
-        'PASSWORD': 'is82k2kdjd82j2jj',
+        'PASSWORD': 'logisware[]2019',
         'HOST': 'localhost',
         'PORT': '3306',
     }
