@@ -11,7 +11,7 @@ SECRET_KEY = '0n)-k@$ci9ql&x%w4)$+7yj#n4+zl5_!+1eip%-*@^1$klxm0m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = [ "127.0.0.1", "192.168.1.52" ]
+ALLOWED_HOSTS = ["127.0.0.1", "192.168.1.52"]
 
 # Application definition
 
@@ -66,9 +66,20 @@ WSGI_APPLICATION = 'LogisWare.wsgi.application'
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# 'PASSWORD': 'is82k2kdjd82j2jj'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'logisdb',
+#         'USER': 'root',
+#         'PASSWORD': 'is82k2kdjd82j2jj',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -121,3 +132,6 @@ USE_TZ = True
 EMAIL_HOST_USER = "logistic@chert.ng"
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = "logistic@chert.ng"
+
+
+mysql_root: is82k2kdjd82j2jj
