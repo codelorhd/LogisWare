@@ -113,7 +113,6 @@ TIME_ZONE = 'Africa/Lagos'
 LOGIN_REDIRECT_URL = 'login_success'
 LOGIN_URL = "login"
 
-
 WELCOME_NEW_USER_EMAIL = 'LogisWare Account Information <noreply@chert.ng>'
 ADMIN_EMAIL_ADDRESS = "admin@chert.ng"
 
