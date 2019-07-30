@@ -10,7 +10,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__name__)))
 SECRET_KEY = '0n)-k@$ci9ql&x%w4)$+7yj#n4+zl5_!+1eip%-*@^1$klxm0m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = [ "127.0.0.1", "192.168.1.52" ]
 
@@ -63,12 +62,12 @@ WSGI_APPLICATION = 'LogisWare.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation
