@@ -15,6 +15,8 @@ ALLOWED_HOSTS = ["127.0.0.1", "192.168.1.52"]
 
 # Application definition
 
+CURRENT_DOMAIN = "192.168.1.52"
+
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'communication.apps.CommunicationConfig',
@@ -123,7 +125,7 @@ TIME_ZONE = 'Africa/Lagos'
 LOGIN_REDIRECT_URL = 'login_success'
 LOGIN_URL = "login"
 
-WELCOME_NEW_USER_EMAIL = 'LogisWare Account Information <noreply@chert.ng>'
+WELCOME_NEW_USER_EMAIL = 'LogisWare Account Information <logisware@chert.ng>'
 ADMIN_EMAIL_ADDRESS = "admchertlogiswarein@gmail.com"
 
 TIME_ZONE = 'Africa/Lagos'

@@ -12,7 +12,7 @@ import sys
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LogisWare.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LogisWare.settings.production')
 
 sys.path.append("/home/server/LogisWare/env")
 
