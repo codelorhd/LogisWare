@@ -40,6 +40,13 @@
               
               {% elif quote.status == 'ARRIVED' %}
               badge-info
+
+              
+              {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+              badge-primary
+        
+              {% elif quote.status == 'PARTIAL_DELIVERY' %}
+              badge-primary
          
               {% elif quote.status == 'PENDING_FINANCE' %}
               badge-primary
@@ -74,6 +81,7 @@
     <div class="dropdown-divider"></div>
     {% if quote.status != 'DELIVERED' %}
       <a class="dropdown-item" href="{% url 'update_quote_delivery' quote.id 'DELIVERED' %}" >Mark Delivered</a>
+      <a class="dropdown-item" href="{% url 'update_quote_delivery' quote.id  'PARTIAL_DELIVERY'%}">Partial Delivery</a>
     {% endif %}
     {% if quote.status != 'NOTDELIVERED' and quote.status != 'DELIVERED' %}
     <a data-toggle="modal" data-target="#notdelivered{{ quote.id }}" class="dropdown-item" href="#notdelivered{{ quote.id }}" >Mark Not Delivered</a>
@@ -97,6 +105,12 @@
                       badge-info
                  
                       {% elif quote.status == 'PENDING_FINANCE' %}
+                      badge-primary
+
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-primary
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
                       badge-primary
         
                       {% elif quote.status == 'NOTPAID_DELIVER' %}
@@ -130,6 +144,13 @@
                     </div>
 
                     <div class="form-group">
+                      <label>Client Manager (CHERT)</label> <br />
+                      <label> {{ quote.manager.name }} </label> <br />
+                      <label> {{ quote.manager.email }} </label> <br />
+                      <hr />
+                    </div>
+
+                    <div class="form-group">
                       <label>Delivery</label><br />
                       <label>{{ quote.delivery.delivery_location }}</label><br />
                       <label>{{ quote.delivery.delivery_state }}</label><br />
@@ -137,7 +158,7 @@
                       <label>{{ quote.delivery.get_delivery_type_display }}</label><br />
                       {% if quote.delivery.delivered_by.name %}
                         <label>Delivered By</label><br />
-                        <label>{{ quote.delivery.delivered_by }}</label> <br />
+                        <label>{{ quote.delivery.delivered_by.name }}</label> <br />
                         <label>Date Delivered</label><br />
                         <label>{{ quote.delivery.date_delivered|date:"D d M Y" }}</label>
                       {% endif %}
@@ -178,7 +199,13 @@
         
                       {% elif quote.status == 'NOTPAID_DELIVER' %}
                       badge-warning
-                  
+
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-primary
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
+                      badge-primary
+
                       {% elif quote.status == 'PAID_DELIVER' %}
                       badge-warning
              

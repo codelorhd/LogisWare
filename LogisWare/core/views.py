@@ -206,7 +206,8 @@ def all_deliveries(request):
     reasons = ReasonNotToDeliver.objects.all()
 
     total_deliveries = list(Quote.objects.filter(
-        (Q(status='AWAITDELIVERY') | Q(status='DELIVERED')
+        (Q(status='AWAITDELIVERY') | Q(status='DELIVERED') 
+        | Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY')
          | Q(status='NOTDELIVERED') | Q(status='ARRIVED'))
     ).order_by('-date_uploaded'))
 
@@ -234,23 +235,23 @@ def dashboard_delivery(request):
     end_date = start_date + timedelta(days=1)
 
     todays_deliveries = Quote.objects.filter(
+        Q(status='PARTIAL_ARRIVAL') | Q(status='ARRIVED') |  Q(status='PARTIAL_DELIVERY') ,
         date_eta__day=this_day,
         date_eta__month=this_month,
-        date_eta__year=this_year,
-        status='ARRIVED'
+        date_eta__year=this_year
     )
 
     tomorrow_deliveries_items = Quote.objects.filter(
+        Q(status='PARTIAL_ARRIVAL') | Q(status='ARRIVED') |  Q(status='PARTIAL_DELIVERY') ,
         date_eta__day=end_date.day,
         date_eta__month=end_date.month,
-        date_eta__year=end_date.year,
-        status='ARRIVED'
+        date_eta__year=end_date.year
     )
 
     # Any quote that has arrived is automatically
     # waiting to be delivered
     awaiting_arrival_quotes = Quote.objects.filter(
-        Q(status='ARRIVED')
+        Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY') ,
     )
 
     unattended_quptes = Quote.objects.filter(
@@ -258,10 +259,9 @@ def dashboard_delivery(request):
     )
 
     all_deliverable_quotes = Quote.objects.filter(
-        date_eta__isnull=False
+        # date_eta__isnull=False 
     )
 
-    print(all_deliverable_quotes.count())
     current_date = None
     deliverables = []
     deliverables_event = []
@@ -277,6 +277,8 @@ def dashboard_delivery(request):
         delivery_sring = " Delivery"
 
         day = str(quote.date_eta.day)
+        if len(day) == 1:
+            day = "0" + day
         month = str(quote.date_eta.month)
         year = str(quote.date_eta.year)
         if len(month) == 1:
@@ -287,7 +289,7 @@ def dashboard_delivery(request):
         date_string = str(quote.date_eta.year) + "" + \
             str(quote.date_eta.month) + "" + str(quote.date_eta.day)
         color = "blue"
-        if timezone.now() > quote.date_eta:
+        if timezone.now() > quote.date_eta :
             color = "red"
 
         try:
@@ -429,7 +431,7 @@ def sales_dashboard(request):
 
         end_date = date(this_year, i, total_days)
         months_quote = Quote.objects.filter(
-            (Q(status='PAID_DELIVER') | Q(status='AWAITDELIVERY')
+            (Q(status='PAID_DELIVER') | Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')
              | (Q(status='DELIVERED') | Q(status='NOTDELIVERED'))),
             date_uploaded__gte=start_date,
             date_uploaded__lte=end_date,

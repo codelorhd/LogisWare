@@ -47,19 +47,29 @@
       </p>
 
       {% if password %}
-        <p>
-          An account has been created for you, kindly login with this login details. 
-          <br /><br />
-          <label>Email Address: {{ user.email }}</label>
-          <br />
-          <label>Password: {{ password }}</label> <br />
-          <label style="color: red" ><strong> Please change your password immediately you sign in.</strong> </label>
-          <br />
-        </p>
+      <p>
+        An account has been created for you, kindly login with this login
+        details.
+        <br /><br />
+        <label>Email Address: {{ user.email }}</label>
+        <br />
+        <label>Password: {{ password }}</label> <br />
+        <label style="color: red"
+          ><strong>
+            Please change your password immediately you sign in.</strong
+          >
+        </label>
+        <br />
+      </p>
+
+      <p>
+        <br />
+        <a href="{{ login_link }}" class="activate-button">Login</a>
+      </p>
       {% endif %}
 
       <p class="welcome-onboard">
-      Best Regards.
+        Best Regards.
         <strong>
           {{ admin.name }}<br />
           Head of Delivery

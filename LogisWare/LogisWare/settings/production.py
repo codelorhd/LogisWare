@@ -3,6 +3,9 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+
+CURRENT_DOMAIN = "192.168.1.52"
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

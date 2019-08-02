@@ -44,6 +44,12 @@
               {% elif quote.status == 'PENDING_FINANCE' %}
               badge-primary
 
+              {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+              badge-primary
+        
+              {% elif quote.status == 'PARTIAL_DELIVERY' %}
+              badge-primary
+
               {% elif quote.status == 'NOTPAID_DELIVER' %}
               badge-warning
           
@@ -74,6 +80,7 @@
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'PRSNG' %}" >Status: Processing</a>
     <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'AWAARIVAL' %}" >Status: Awaiting Delivery</a>
+    <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'PARTIAL_ARRIVAL' %}">Status: Partial Arrival</a>
     <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'ARRIVED' %}">Status: Items Arrived</a>
   </div>
 </div>
@@ -93,7 +100,13 @@
                       
                       {% elif quote.status == 'ARRIVED' %}
                       badge-success
-                 
+
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-primary
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
+                      badge-primary
+
                       {% elif quote.status == 'PENDING_FINANCE' %}
                       badge-primary
         
@@ -132,10 +145,10 @@
                       <label>{{ quote.delivery.delivery_location }}</label><br />
                       <label>{{ quote.delivery.delivery_state }}</label><br />
                       <label>Delivery Type</label> <br />
-                      <label>{{ quote.delivery.get_delivery_type_display }}</label>
+                      <label>{{ quote.delivery.get_delivery_type_display }}</label><br /><br />
                       {% if quote.delivery.delivered_by %}
                         <label>Delivered By</label><br />
-                        <label>{{ quote.delivery.delivered_by }}</label> <br />
+                        <label>{{ quote.delivery.delivered_by.name }}</label> <br />
                         <label>Date Delivered</label><br />
                         <label>{{ quote.delivery.date_delivered|date:"D d M Y" }}</label>
                       {% endif %}

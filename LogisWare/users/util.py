@@ -28,6 +28,7 @@ class NewUserMessages():
             {
                 'user': user,
                 'domain': domain,
+                'login_link': domain + "/login",
                 'password': user_password,
                 'admin': admin
             }

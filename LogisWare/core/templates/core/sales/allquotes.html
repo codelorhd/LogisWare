@@ -31,6 +31,12 @@
               {% elif quote.status == 'ARRIVED' %}
               badge-secondary
          
+              {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+              badge-primary
+         
+              {% elif quote.status == 'PARTIAL_DELIVERY' %}
+              badge-primary
+         
               {% elif quote.status == 'PENDING_FINANCE' %}
               badge-primary
 
@@ -76,6 +82,12 @@
                       
                       {% elif quote.status == 'ARRIVED' %}
                       badge-secondary
+
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-primary
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
+                      badge-primary
                  
                       {% elif quote.status == 'PENDING_FINANCE' %}
                       badge-primary
@@ -116,9 +128,9 @@
                       <label>{{ quote.delivery.delivery_state }}</label><br />
                       <label>Delivery Type</label> <br />
                       <label>{{ quote.delivery.get_delivery_type_display }}</label>
-                      {% if quote.delivery.delivered_by %}
+                      {% if quote.delivery.delivered_by %}<br /><br />
                         <label>Delivered By</label><br />
-                        <label>{{ quote.delivery.delivered_by }}</label> <br />
+                        <label>{{ quote.delivery.delivered_by.name }}</label> <br />
                         <label>Date Delivered</label><br />
                         <label>{{ quote.delivery.date_delivered|date:"D d M Y" }}</label>
                       {% endif %}

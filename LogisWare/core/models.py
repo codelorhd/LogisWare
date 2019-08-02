@@ -33,6 +33,9 @@ class Quote(models.Model):
         ('AWAARIVAL', 'Awaiting Arrival'),
         ('ARRIVED', 'Arrived'),
 
+        ('PARTIAL_ARRIVAL', 'Partial Arrival'),
+        ('PARTIAL_DELIVERY', 'Partial Delivery'),
+
         ('PENDING_FINANCE', 'Pending Approval'),
         ('NOTPAID_DELIVER', 'Not Paid, Allow Delivery'),
         ('PAID_DELIVER', 'Paid, Allow Delivery'),

@@ -47,7 +47,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-path('password-reset', auth_views.PasswordResetView.as_view(
+    path('password-reset', auth_views.PasswordResetView.as_view(
         template_name="users/registrations/password_reset.html",
         email_template_name='users/email/password_reset_email.html',
         subject_template_name='users/email/password_reset_subject.txt',
