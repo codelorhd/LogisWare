@@ -55,7 +55,6 @@ def deactivate_user(request, pk):
 @login_required
 @require_http_methods(["POST"])
 def create_new_user(request):
-    print(request.POST)
 
     email = request.POST.get('email', None)
     name = request.POST.get('name', None)
@@ -208,7 +207,8 @@ def all_deliveries(request):
     total_deliveries = list(Quote.objects.filter(
         (Q(status='AWAITDELIVERY') | Q(status='DELIVERED') 
         | Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY')
-         | Q(status='NOTDELIVERED') | Q(status='ARRIVED'))
+         | Q(status='NOTDELIVERED') | Q(status='ARRIVED')),
+            delivery__delivered_by = request.user
     ).order_by('-date_uploaded'))
 
     context = {
@@ -224,7 +224,8 @@ def all_deliveries(request):
 def dashboard_delivery(request):
 
     total_deliveries = list(Quote.objects.filter(
-        status='DELIVERED'
+        status='DELIVERED',
+        delivery__delivered_by = request.user
     ).order_by('-date_uploaded'))
 
     this_year = timezone.now().year
@@ -238,28 +239,33 @@ def dashboard_delivery(request):
         Q(status='PARTIAL_ARRIVAL') | Q(status='ARRIVED') |  Q(status='PARTIAL_DELIVERY') ,
         date_eta__day=this_day,
         date_eta__month=this_month,
-        date_eta__year=this_year
+        date_eta__year=this_year,
+        delivery__delivered_by = request.user
     )
 
     tomorrow_deliveries_items = Quote.objects.filter(
         Q(status='PARTIAL_ARRIVAL') | Q(status='ARRIVED') |  Q(status='PARTIAL_DELIVERY') ,
         date_eta__day=end_date.day,
         date_eta__month=end_date.month,
-        date_eta__year=end_date.year
+        date_eta__year=end_date.year,
+        delivery__delivered_by = request.user
     )
 
     # Any quote that has arrived is automatically
     # waiting to be delivered
     awaiting_arrival_quotes = Quote.objects.filter(
         Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY') ,
+        delivery__delivered_by = request.user
     )
 
     unattended_quptes = Quote.objects.filter(
-        status='NOTDELIVERED'
+        status='NOTDELIVERED',
+        delivery__delivered_by = request.user
     )
 
     all_deliverable_quotes = Quote.objects.filter(
         # date_eta__isnull=False 
+        delivery__delivered_by = request.user
     )
 
     current_date = None
