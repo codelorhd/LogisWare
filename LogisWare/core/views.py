@@ -239,33 +239,30 @@ def dashboard_delivery(request):
         Q(status='PARTIAL_ARRIVAL') | Q(status='ARRIVED') |  Q(status='PARTIAL_DELIVERY') ,
         date_eta__day=this_day,
         date_eta__month=this_month,
-        date_eta__year=this_year,
-        delivery__delivered_by = request.user
+        date_eta__year=this_year
     )
 
     tomorrow_deliveries_items = Quote.objects.filter(
         Q(status='PARTIAL_ARRIVAL') | Q(status='ARRIVED') |  Q(status='PARTIAL_DELIVERY') ,
         date_eta__day=end_date.day,
         date_eta__month=end_date.month,
-        date_eta__year=end_date.year,
-        delivery__delivered_by = request.user
+        date_eta__year=end_date.year
     )
 
     # Any quote that has arrived is automatically
     # waiting to be delivered
-    awaiting_arrival_quotes = Quote.objects.filter(
+    
+    awaiting_delivery_quotes = Quote.objects.filter(
         Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY') ,
         delivery__delivered_by = request.user
     )
 
     unattended_quptes = Quote.objects.filter(
-        status='NOTDELIVERED',
-        delivery__delivered_by = request.user
+        status='NOTDELIVERED'
     )
 
     all_deliverable_quotes = Quote.objects.filter(
         # date_eta__isnull=False 
-        delivery__delivered_by = request.user
     )
 
     current_date = None
@@ -343,7 +340,7 @@ def dashboard_delivery(request):
         'todays_deliveries_items': todays_deliveries,
         'tomorrow_deliveries_items': tomorrow_deliveries_items,
         'todays_deliveries': todays_deliveries.count(),
-        'awaiting_arrival_quotes': awaiting_arrival_quotes.count(),
+        'awaiting_arrival_quotes': awaiting_delivery_quotes.count(),
         'unattended_quptes': unattended_quptes.count(),
     }
 
