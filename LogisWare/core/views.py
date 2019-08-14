@@ -211,6 +211,7 @@ def all_deliveries(request):
             delivery__delivered_by = request.user
     ).order_by('-date_uploaded'))
 
+
     context = {
         'deliveries': total_deliveries,
         'reasons': reasons,
@@ -233,7 +234,7 @@ def dashboard_delivery(request):
     this_month = timezone.now().month
 
     start_date = date(this_year, this_month, this_day)
-    end_date = start_date + timedelta(days=1)
+    end_date = start_date + timedelta(days=+1)
 
     todays_deliveries = Quote.objects.filter(
         Q(status='PARTIAL_ARRIVAL') | Q(status='ARRIVED') |  Q(status='PARTIAL_DELIVERY') ,
@@ -253,7 +254,7 @@ def dashboard_delivery(request):
     # waiting to be delivered
     
     awaiting_delivery_quotes = Quote.objects.filter(
-        Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY') ,
+        Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY') | Q(status='ARRIVED') ,
         delivery__delivered_by = request.user
     )
 
