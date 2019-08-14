@@ -281,20 +281,24 @@ def dashboard_delivery(request):
         # else:
         delivery_sring = " Delivery"
 
-        day = str(quote.date_eta.day)
+        # I don't know why this is, but a day was deduceted
+        date_eta = quote.date_eta + timedelta(+1)
+
+        day = str(date_eta.day)
         if len(day) == 1:
             day = "0" + day
-        month = str(quote.date_eta.month)
-        year = str(quote.date_eta.year)
+        month = str(date_eta.month)
+        year = str(date_eta.year)
         if len(month) == 1:
             month = "0" + month
 
         date_format = year + "-" + month + "-" + day
+        print(quote)
 
-        date_string = str(quote.date_eta.year) + "" + \
-            str(quote.date_eta.month) + "" + str(quote.date_eta.day)
+        date_string = str(date_eta.year) + "" + \
+            str(date_eta.month) + "" + str(date_eta.day)
         color = "blue"
-        if timezone.now() > quote.date_eta:
+        if timezone.now() > date_eta:
             color = "red"
 
         try:
@@ -317,10 +321,10 @@ def dashboard_delivery(request):
             }
 
             deliverables_event.append(item)
-            current_date = quote.date_eta
+            current_date = date_eta
             dates_worked.append(date_string)
 
-        print(deliverables_event)
+        # print(deliverables_event)
 
         # if current_date != quote.date_eta:
         #     print(current_date == quote.date_eta)
