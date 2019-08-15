@@ -25,7 +25,8 @@ class Quote(models.Model):
         get_user_model(), on_delete=models.SET_NULL, null=True, blank=False)
 
     date_uploaded = models.DateTimeField(default=timezone.now)
-    date_eta = models.DateTimeField(blank=True, null=True, default=timezone.now)
+    date_eta = models.DateTimeField(
+        blank=True, null=True, default=timezone.now)
     quote_number = models.CharField(max_length=15)
     quote_statuses = [
         ('PRSNG', 'Processing'),

@@ -23,6 +23,21 @@ urlpatterns = [
          core_views.delete_quote_item, name='remove_quotes_items_sales'),
     path('clients', core_views.ClientView.as_view(), name='my_clients_sales'),
 
+    path('quotes', core_views.all_quotes_sales,
+         name='total_quotes_sales'),
+    path('quotes/done', core_views.done_deals_sales,
+         name='done_deals_sales'),
+    path('quotes/pending', core_views.pending_items_sales,
+         name='pending_items_sales'),
+
+    path('procurements/unattended/quotes', core_views.unattended_quptes,
+         name='unattended_quptes'),
+    path('procurements/awaiting/quotes', core_views.awaiting_arrival_quotes,
+         name='awaiting_arrival_quotes'),
+    path('procurements/total/quotes', core_views.total_quotes_procurement,
+         name='total_quotes_procurement'),
+    path('procurements/today/quotes', core_views.today_quotes_procurement,
+         name='today_quotes_procurement'),
     path('procurement', core_views.dashboard_procurement,
          name='dashboard_procurement'),
     path('procurement/quotes', core_views.all_quotes_procurement,
@@ -31,8 +46,21 @@ urlpatterns = [
          core_views.update_quote_prodcurement, name='update_quote_procurement'),
 
     path('delivery', core_views.dashboard_delivery, name='dashboard_delivery'),
+
+    path('delivery/days_deliveries/<str:date_string>',
+         core_views.days_deliveries, name='days_deliveries'),
+    path('delivery/awaiting_deliveries',
+         core_views.awaiting_deliveries, name='awaiting_deliveries'),
+    path('delivery/todays_deliveries',
+         core_views.todays_deliveries, name='todays_deliveries'),
+    path('delivery/not_delivered',
+         core_views.not_delivered, name='not_delivered'),
+    path('delivery/total_delivered',
+         core_views.total_delivered, name='total_delivered'),
+
     path('delivery/deliveries', core_views.all_deliveries,
          name='all_deliveries'),
+
     path('delivery/quote/status/<int:quote_pk>/<str:status_code>',
          core_views.update_quote_delivery, name='update_quote_delivery'),
     path('delivery/quote/not_delivered',

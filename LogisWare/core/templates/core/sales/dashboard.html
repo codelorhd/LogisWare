@@ -1,7 +1,9 @@
 {% extends 'core/sales/base.html' %}
 {% block content %}
 
-
+    <a href="{% url 'add_quotes_sales' %}" class="btn btn-primary">Upload New Quote</a>
+    <br />
+    <br />
     <div class="blue accent-2 p-5">
         <canvas data-chart="line" height="300" data-dataset="[
                                                             {{ months_data }},
@@ -102,7 +104,10 @@
                                 <div class="float-right">
                                     <span class="icon icon-note-list text-light-blue s-48"></span>
                                 </div>
-                                <div class="counter-title">Total Quotes</div>
+                                <div class="counter-title">
+                                    <a href="{% url 'total_quotes_sales' %}"> Total Quotes </a> 
+                                </div>
+                                
                                 <h5 class="sc-counter mt-3">{{ total_quotes }}</h5>
                             </div>
                         </div>
@@ -113,7 +118,9 @@
                                 <div class="float-right">
                                     <span class="icon icon-check text-light-blue s-48"></span>
                                 </div>
-                                <div class="counter-title ">Done Deals</div>
+                                <div class="counter-title ">
+                                    <a href="{% url 'done_deals_sales' %}"> Done Deals </a> 
+                                </div>
                                 <h5 class="sc-counter mt-3">{{ done_deals }}</h5>
                             </div>
                         </div>
@@ -124,7 +131,9 @@
                                 <div class="float-right">
                                     <span class="icon icon-inbox-document-text text-light-blue s-48"></span>
                                 </div>
-                                <div class="counter-title">Pending Items</div>
+                                <div class="counter-title">
+                                    <a href="{% url 'pending_items_sales' %}"> Pending Items </a> 
+                                </div>
                                 <h5 class="sc-counter mt-3">{{ pending_items }}</h5>
                             </div>
                         </div>

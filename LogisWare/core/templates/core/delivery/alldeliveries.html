@@ -32,41 +32,40 @@
           <td> {{ quote.date_eta|date:"D d M Y" }} </td>
           <td class="text-center" > 
               <span class="badge 
-              {% if quote.status == 'APRSNG' %}
-              badge-dark
-
-              {% elif quote.status == 'AWAARIVAL' %}
-              badge-info
-              
-              {% elif quote.status == 'ARRIVED' %}
-              badge-info
-
-              
-              {% elif quote.status == 'PARTIAL_ARRIVAL' %}
-              badge-primary
+               {% if quote.status == 'APRSNG' %}
+                      badge-dark
         
-              {% elif quote.status == 'PARTIAL_DELIVERY' %}
-              badge-primary
-         
-              {% elif quote.status == 'PENDING_FINANCE' %}
-              badge-primary
+                      {% elif quote.status == 'AWAARIVAL' %}
+                      badge-warning
+                      
+                      {% elif quote.status == 'ARRIVED' %}
+                      badge-danger
+                 
+                      {% elif quote.status == 'PENDING_FINANCE' %}
+                      badge-primary
+        
+                      {% elif quote.status == 'NOTPAID_DELIVER' %}
+                      badge-warning
 
-              {% elif quote.status == 'NOTPAID_DELIVER' %}
-              badge-warning
-          
-              {% elif quote.status == 'PAID_DELIVER' %}
-              badge-warning
-     
-              {% elif quote.status == 'AWAITDELIVERY' %}
-              badge-warning
-     
-              {% elif quote.status == 'DELIVERED' %}
-              badge-success
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-danger
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
+                      badge-success
 
-              {% elif quote.status == 'NOTDELIVERED' %}
-              badge-danger
-
-              {% endif %}">{{ quote.get_status_display }}</span>
+                      {% elif quote.status == 'PAID_DELIVER' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'AWAITDELIVERY' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'DELIVERED' %}
+                      badge-success
+        
+                      {% elif quote.status == 'NOTDELIVERED' %}
+                      badge-dark
+        
+                      {% endif %}">{{ quote.get_status_display }}</span>
           </td>
           <td> {{ quote.delivery.get_delivery_type_display }} </td>
           <td>
@@ -95,27 +94,27 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="view-quote{{ quote.id }}"> Quote Number: {{ quote.quote_number }} <span class="badge 
-                      {% if quote.status == 'APRSNG' %}
+                       {% if quote.status == 'APRSNG' %}
                       badge-dark
         
                       {% elif quote.status == 'AWAARIVAL' %}
-                      badge-info
+                      badge-warning
                       
                       {% elif quote.status == 'ARRIVED' %}
-                      badge-info
+                      badge-danger
                  
                       {% elif quote.status == 'PENDING_FINANCE' %}
-                      badge-primary
-
-                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
-                      badge-primary
-                
-                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
                       badge-primary
         
                       {% elif quote.status == 'NOTPAID_DELIVER' %}
                       badge-warning
-                  
+
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-danger
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
+                      badge-success
+
                       {% elif quote.status == 'PAID_DELIVER' %}
                       badge-warning
              
@@ -126,7 +125,7 @@
                       badge-success
         
                       {% elif quote.status == 'NOTDELIVERED' %}
-                      badge-danger
+                      badge-dark
         
                       {% endif %}">{{ quote.get_status_display }}</span> </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -189,10 +188,10 @@
                       badge-dark
         
                       {% elif quote.status == 'AWAARIVAL' %}
-                      badge-info
+                      badge-warning
                       
                       {% elif quote.status == 'ARRIVED' %}
-                      badge-success
+                      badge-danger
                  
                       {% elif quote.status == 'PENDING_FINANCE' %}
                       badge-primary
@@ -201,10 +200,10 @@
                       badge-warning
 
                       {% elif quote.status == 'PARTIAL_ARRIVAL' %}
-                      badge-primary
+                      badge-danger
                 
                       {% elif quote.status == 'PARTIAL_DELIVERY' %}
-                      badge-primary
+                      badge-success
 
                       {% elif quote.status == 'PAID_DELIVER' %}
                       badge-warning
@@ -216,7 +215,7 @@
                       badge-success
         
                       {% elif quote.status == 'NOTDELIVERED' %}
-                      badge-danger
+                      badge-dark
         
                       {% endif %}">{{ quote.get_status_display }}</span> </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

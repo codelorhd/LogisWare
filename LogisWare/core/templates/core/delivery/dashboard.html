@@ -27,7 +27,7 @@
                         <span class="icon icon-list3 s-48"></span>
                     </div>
                     <div class="sc-counter s-36">{{ total_deliveries }}</div>
-                    <h6 class="counter-title">Total Delivered</h6>
+                        <a href="{% url 'total_delivered' %}"> Total Delivered </a>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -36,7 +36,9 @@
                         <span class="icon icon-today s-48"></span>
                     </div>
                     <div class="sc-counter s-36">{{ todays_deliveries }}</div>
-                    <h6 class="counter-title">Today's Delivery</h6>
+                    <h6 class="counter-title">
+                        <a href="{% url 'todays_deliveries' %}"> Today's Delivery </a>
+                    </h6>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -45,7 +47,9 @@
                         <span class="icon icon-bus s-48"></span>
                     </div>
                     <div class="sc-counter s-36">{{ awaiting_arrival_quotes }}</div>
-                    <h6 class="counter-title">Awaiting Delivery</h6>
+                    <h6 class="counter-title">
+                        <a href="{% url 'awaiting_deliveries' %}"> Awaiting Delivery </a>
+                    </h6>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -54,7 +58,9 @@
                         <span class="icon icon-note-important2 s-48"></span>
                     </div>
                     <div class="sc-counter s-36">{{ unattended_deliveries }}</div>
-                    <h6 class="counter-title">Not Delivered</h6>
+                    <h6 class="counter-title">
+                        <a href="{% url 'not_delivered' %}"> Not Delivered </a>
+                    </h6>    
                 </div>
             </div>
         </div>
@@ -248,6 +254,11 @@
     var calendar = new FullCalendar.Calendar(calendarEl, {
             navLinks: true,
             navLinkDayClick: function(date, jsEvent) {
+                var url = "{% url 'days_deliveries' 'URL' %}"
+                url = url.replace("URL", date.toISOString());
+
+                window.location = url;
+
                 console.log('day', date.toISOString());
                 console.log('coords', jsEvent.pageX, jsEvent.pageY);
             },
