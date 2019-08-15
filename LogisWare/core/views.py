@@ -379,6 +379,13 @@ def dashboard_delivery(request):
 
     all_deliverable_quotes = Quote.objects.filter(
         # date_eta__isnull=False
+        Q( status = 'PARTIAL_ARRIVAL' ) |
+        Q( status = 'PARTIAL_DELIVERY' ) |
+        Q( status = 'ARRIVED' ) |
+        Q( status = 'AWAITDELIVERY' ) |
+        Q( status = 'PAID_DELIVER' ) |
+        Q( status = 'DELIVERED' )
+        # if quote.status in ['PAID_DELIVER', 'AWAITDELIVERY', 'DELIVERED', 'NOTDELIVERED', 'PARTIAL_ARRIVAL']:
     )
 
     current_date = None
