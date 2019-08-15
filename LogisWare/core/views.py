@@ -291,14 +291,26 @@ def days_deliveries(request, date_string):
     date = parse(date_string)
     date = date + timedelta(+1)
 
+    the_date = datetime(date.year, date.month, date.day)
+
     total_deliveries = list(Quote.objects.filter(
-        # (Q(status='AWAITDELIVERY') | Q(status='DELIVERED')
-        #  | Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY')
-        #  | Q(status='NOTDELIVERED')),
-        date_eta__year=date.year,
-        date_eta__month=date.month,
-        date_eta__day=date.day
+        (Q(status='PARTIAL_ARRIVAL') |
+        Q(status='PARTIAL_DELIVERY') |
+        Q(status='ARRIVED') |
+        Q(status='AWAITDELIVERY') |
+        Q(status='PAID_DELIVER') |
+        Q(status='DELIVERED')),
+        date_eta=the_date
     ).order_by('-date_uploaded'))
+
+    # total_deliveries = list(Quote.objects.filter(
+    #     # (Q(status='AWAITDELIVERY') | Q(status='DELIVERED')
+    #     #  | Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY')
+    #     #  | Q(status='NOTDELIVERED')),
+    #     date_eta__year=date.year,
+    #     date_eta__month=date.month,
+    #     date_eta__day=date.day
+    # ).order_by('-date_uploaded'))
     print(total_deliveries)
 
     for delivey in total_deliveries:
@@ -379,12 +391,12 @@ def dashboard_delivery(request):
 
     all_deliverable_quotes = Quote.objects.filter(
         # date_eta__isnull=False
-        Q( status = 'PARTIAL_ARRIVAL' ) |
-        Q( status = 'PARTIAL_DELIVERY' ) |
-        Q( status = 'ARRIVED' ) |
-        Q( status = 'AWAITDELIVERY' ) |
-        Q( status = 'PAID_DELIVER' ) |
-        Q( status = 'DELIVERED' )
+        Q(status='PARTIAL_ARRIVAL') |
+        Q(status='PARTIAL_DELIVERY') |
+        Q(status='ARRIVED') |
+        Q(status='AWAITDELIVERY') |
+        Q(status='PAID_DELIVER') |
+        Q(status='DELIVERED')
         # if quote.status in ['PAID_DELIVER', 'AWAITDELIVERY', 'DELIVERED', 'NOTDELIVERED', 'PARTIAL_ARRIVAL']:
     )
 
@@ -540,6 +552,7 @@ def unattended_quptes(request):
 
     return render(request, 'core/procurement/allquotes.html', context)
 
+
 @login_required
 def awaiting_arrival_quotes(request):
 
@@ -575,6 +588,7 @@ def today_quotes_procurement(request):
 
     return render(request, 'core/procurement/allquotes.html', context)
 
+
 @login_required
 def total_quotes_procurement(request):
     my_quotes = list(Quote.objects.all().order_by('pk'))
@@ -585,6 +599,7 @@ def total_quotes_procurement(request):
     }
 
     return render(request, 'core/procurement/allquotes.html', context)
+
 
 @login_required
 def all_quotes_procurement(request):
@@ -655,10 +670,10 @@ def sales_dashboard(request):
 @login_required
 def done_deals_sales(request):
     my_quotes = Quote.objects.filter(
-            (Q(status='PAID_DELIVER') | Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')
-             | (Q(status='DELIVERED') )),
-            manager=request.user,
-        )
+        (Q(status='PAID_DELIVER') | Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')
+         | (Q(status='DELIVERED'))),
+        manager=request.user,
+    )
 
     context = {
         'quotes': my_quotes,
@@ -671,10 +686,10 @@ def done_deals_sales(request):
 @login_required
 def pending_items_sales(request):
     my_quotes = Quote.objects.filter(
-            ( Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')
-             | (Q(status='NOTDELIVERED') )),
-            manager=request.user,
-        )
+        (Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')
+         | (Q(status='NOTDELIVERED'))),
+        manager=request.user,
+    )
 
     context = {
         'quotes': my_quotes,
@@ -682,6 +697,7 @@ def pending_items_sales(request):
     }
 
     return render(request, 'core/sales/allquotes.html', context)
+
 
 @login_required
 def all_quotes_sales(request):
