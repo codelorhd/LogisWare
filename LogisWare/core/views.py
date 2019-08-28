@@ -359,13 +359,11 @@ def dashboard_delivery(request):
 
     start_date = date(this_year, this_month, this_day)
     end_date = start_date + timedelta(days=+1)
-
+    
     todays_deliveries = Quote.objects.filter(
         Q(status='PARTIAL_ARRIVAL') | Q(
             status='ARRIVED') | Q(status='PARTIAL_DELIVERY'),
-        date_eta__day=this_day,
-        date_eta__month=this_month,
-        date_eta__year=this_year
+        date_eta = start_date
     )
 
     tomorrow_deliveries_items = Quote.objects.filter(
@@ -686,7 +684,7 @@ def done_deals_sales(request):
 @login_required
 def pending_items_sales(request):
     my_quotes = Quote.objects.filter(
-        (Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')
+        (Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')  | Q(status='APRSNG')
          | (Q(status='NOTDELIVERED'))),
         manager=request.user,
     )
@@ -785,9 +783,7 @@ class ClientView(ListView):
             manager__id=self.request.user.id
         ).order_by('-date_uploaded'))
 
-        context = {
-            'total_quotes': len(my_quotes),
-        }
+        context['total_quotes'] = len(my_quotes)
 
         return context
 

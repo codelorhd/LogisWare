@@ -12,7 +12,7 @@
 
 <table
   class="table table-bordered table-hover data-tables"
-  data-options='{"searching":true}'
+  data-options='{"searching":true, "pageLength": "100", "ordering": false}'
 >
   <thead>
     <tr>
@@ -20,6 +20,8 @@
       <th>Client Name</th>
       <th>ETA</th>
       <th>Status</th>
+      <th>Delivery Type</th>
+      <th>Location</th>
       <th>Date Uploaded</th>
       <th>Actions</th>
     </tr>
@@ -67,6 +69,9 @@
         
                       {% endif %}">{{ quote.get_status_display }}</span>
           </td>
+          <td> {{ quote.delivery.get_delivery_type_display }} </td>
+          <td> <label>{{ quote.delivery.delivery_location }}</label>
+                      (<label>{{ quote.delivery.delivery_state }}</label>) </td>
           <td> {{ quote.date_uploaded|date:"D d M Y" }} </td>
           <td>
 
