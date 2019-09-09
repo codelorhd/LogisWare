@@ -20,6 +20,7 @@
       <th>Location </th>
       <th>ETA</th>
       <th>Status</th>
+      <th>Description</th>
       <th>Type</th>
       <th>Actions</th>
     </tr>
@@ -67,6 +68,7 @@
         
                       {% endif %}">{{ quote.get_status_display }}</span>
           </td>
+          <td> {% if quote.description != None %} {{ quote.description }} {% endif %} </td>
           <td> {{ quote.delivery.get_delivery_type_display }} </td>
           <td>
 
@@ -133,6 +135,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
+
                     
                     <div class="form-group">
                       <label>Client Details</label> <br />
@@ -141,6 +144,7 @@
                       <label> {{ quote.client.email }} </label> <br />
                       <hr />
                     </div>
+
 
                     <div class="form-group">
                       <label>Client Manager (CHERT)</label> <br />

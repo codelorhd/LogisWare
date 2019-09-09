@@ -47,6 +47,8 @@ class Quote(models.Model):
     ]
     status = models.CharField(
         max_length=20, choices=quote_statuses, default="APRSNG")
+    
+    description = models.TextField(null= True, blank = True )
 
     # reference = models.CharField(max_length=1000)
 

@@ -589,7 +589,7 @@ def today_quotes_procurement(request):
 
 @login_required
 def total_quotes_procurement(request):
-    my_quotes = list(Quote.objects.all().order_by('pk'))
+    my_quotes = list(Quote.objects.all().order_by('-date_uploaded'))
 
     context = {
         'quotes': my_quotes,
@@ -802,6 +802,7 @@ def insert_quote(request):
 
     quote_number = str(request.POST.get('quote_number', None)).strip()
     eta = request.POST.get('eta', None)
+    description = request.POST.get('description', None)
 
     # part_numbers = request.POST.getlist('part_numbers[]', [])
     # descriptions = request.POST.getlist('descriptions[]', [])
@@ -843,6 +844,7 @@ def insert_quote(request):
         quote.date_eta = date_eta
         quote.manager = request.user
         quote.quote_number = quote_number
+        quote.description = description
 
         state = 0
         try:
