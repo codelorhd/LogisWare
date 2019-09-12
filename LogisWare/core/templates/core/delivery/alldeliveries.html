@@ -20,7 +20,7 @@
       <th>Location </th>
       <th>ETA</th>
       <th>Status</th>
-      <th>Description</th>
+      {% comment %} <th>Description</th> {% endcomment %}
       <th>Type</th>
       <th>Actions</th>
     </tr>
@@ -29,7 +29,17 @@
     {% for quote in deliveries  %}
       <tr>
           <td> {{ quote.quote_number }} </td>
-          <td> {{ quote.delivery.delivery_location }} </td>
+          <td> {{ quote.delivery.delivery_location }}
+          {% if quote.client %}
+          <br /> <br />
+          <strong>Client's Details</strong> <br />
+           {{ quote.client.name }}
+          <br />
+           {{ quote.client.phone_one }}
+          <br />
+           {{ quote.client.email }}
+          {% endif %}
+            </td>
           <td> {{ quote.date_eta|date:"D d M Y" }} </td>
           <td class="text-center" > 
               <span class="badge 
@@ -74,10 +84,10 @@
         
                       {% endif %}">{{ quote.get_status_display }}</span>
           </td>
-          <td> {% if quote.description != None %} {{ quote.description }} {% endif %} </td>
+          {% comment %} <td> {% if quote.description != None %} {{ quote.description }} {% endif %} </td> {% endcomment %}
           <td> {{ quote.delivery.get_delivery_type_display }} </td>
           <td>
-
+  <small>Check here for description </small>
 <div  class="dropdown">
   <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Quote Actions
@@ -155,6 +165,11 @@
                   </div>
                   <div class="modal-body">
 
+                    <div class="form-group">
+                      <label>Description</label> <br />
+                      <label> {{ quote.description }} </label>
+                      <hr />
+                    </div>
                     
                     <div class="form-group">
                       <label>Client Details</label> <br />

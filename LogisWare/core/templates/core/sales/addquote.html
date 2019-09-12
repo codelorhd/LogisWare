@@ -80,6 +80,7 @@
                   type="date"
                   name="eta"
                   class="form-control form-control-lg"
+                  required="true"
                 />
               </div>
 
@@ -93,7 +94,7 @@
 
               <div class="form-group">
                 <label>Delivery Type * </label>
-                <select class="form-control" name="delivery_type">
+                <select id="delivery_type" class="form-control" name="delivery_type">
                   <option value="PICK_UP">Pick Up</option>
                   <option value="DELIVER">We Deliver</option>
                 </select>
@@ -102,9 +103,11 @@
               <div class="form-group">
                 <label>Delivery Location (Full Address) * </label>
                 <input
+                  id="delivery_location"
                   name="delivery_location"
                   class="form-control"
                   value="CHERT SYSTEM SOLUTIONS"
+                  required="true"
                 />
               </div>
 
@@ -133,6 +136,17 @@
   </form>
 
 {% endblock %} {% block scripts %}
+  <script>
+      $('#delivery_type').on('change', function() {
+          var value = $(this).val();
+          if(value == 'DELIVER'){
+            $('#delivery_location').val("");
+          }else if(value == 'PICK_UP'){
+            $('#delivery_location').val("CHERT SYSTEM SOLUTIONS");
+          }
+      } );
+  </script>
+
 {% comment %} <script>
   var item_count = 0;
   var quote_item_availables = [];
