@@ -1,9 +1,7 @@
 {% extends 'core/sales/base.html' %} {% block content %}
 
-<table
-  class="table table-bordered table-hover data-tables"
-  data-options='{"searching":true, "pageLength": "100", "ordering": false}'
->
+<table class="table table-bordered table-hover data-tables"
+  data-options='{"searching":true, "pageLength": "100", "ordering": false}'>
   <thead>
     <tr>
       <th>Quote Number</th>
@@ -54,6 +52,12 @@
         
                       {% elif quote.status == 'NOTDELIVERED' %}
                       badge-dark
+
+                      {% elif quote.status == 'ITEM_RELEASED' %}
+                      badge-warning
+
+                      {% elif quote.status == 'ITEM_RELEASED_CONFIRMED' %}
+                      badge-success
         
                       {% endif %}">{{ quote.get_status_display }}</span>
           </td>
@@ -106,6 +110,12 @@
         
                       {% elif quote.status == 'NOTDELIVERED' %}
                       badge-dark
+
+                      {% elif quote.status == 'ITEM_RELEASED' %}
+                      badge-warning
+
+                      {% elif quote.status == 'ITEM_RELEASED_CONFIRMED' %}
+                      badge-success
         
                       {% endif %}">{{ quote.get_status_display }}</span> </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

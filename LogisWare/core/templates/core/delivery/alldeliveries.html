@@ -65,6 +65,12 @@
         
                       {% elif quote.status == 'NOTDELIVERED' %}
                       badge-dark
+
+                      {% elif quote.status == 'ITEM_RELEASED' %}
+                      badge-warning
+
+                      {% elif quote.status == 'ITEM_RELEASED_CONFIRMED' %}
+                      badge-success
         
                       {% endif %}">{{ quote.get_status_display }}</span>
           </td>
@@ -87,6 +93,13 @@
     {% if quote.status != 'NOTDELIVERED' and quote.status != 'DELIVERED' %}
     <a data-toggle="modal" data-target="#notdelivered{{ quote.id }}" class="dropdown-item" href="#notdelivered{{ quote.id }}" >Mark Not Delivered</a>
     {% endif %}
+
+      {% if quote.status != 'ITEM_RELEASED_CONFIRMED' and quote.status != 'DELIVERED' %}
+        <hr />
+        <a class="dropdown-item" href="{% url 'update_quote_delivery' quote.id 'ITEM_RELEASED_CONFIRMED' %}">Status: Items
+          Released Confirmed</a>
+      {% endif %}
+      
   </div>
 </div>
               </td>
@@ -128,6 +141,12 @@
         
                       {% elif quote.status == 'NOTDELIVERED' %}
                       badge-dark
+
+                      {% elif quote.status == 'ITEM_RELEASED' %}
+                      badge-warning
+
+                      {% elif quote.status == 'ITEM_RELEASED_CONFIRMED' %}
+                      badge-success
         
                       {% endif %}">{{ quote.get_status_display }}</span> </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -171,6 +190,7 @@
                         <label>Reason for not delivery</label><br />
                         <label>{{ quote.delivery.not_delivered_why }}</label>
                       {% endif %}
+                      
 
                     </div>
 
@@ -220,6 +240,12 @@
         
                       {% elif quote.status == 'NOTDELIVERED' %}
                       badge-dark
+
+                      {% elif quote.status == 'ITEM_RELEASED' %}
+                      badge-warning
+
+                      {% elif quote.status == 'ITEM_RELEASED_CONFIRMED' %}
+                      badge-success
         
                       {% endif %}">{{ quote.get_status_display }}</span> </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

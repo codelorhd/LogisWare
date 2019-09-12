@@ -187,7 +187,7 @@ def update_quote_delivery(request, quote_pk, status_code):
     quote.status = status_code
     quote.save()
 
-    if status_code == 'DELIVERED':
+    if status_code == 'DELIVERED' or status_code == 'ITEM_RELEASED_CONFIRMED' :
         delivery = quote.delivery
         delivery.date_delivered = timezone.now()
         delivery.delivered_by = request.user
@@ -206,7 +206,7 @@ def total_delivered(request):
     reasons = ReasonNotToDeliver.objects.all()
 
     total_deliveries = list(Quote.objects.filter(
-        status='DELIVERED',
+        Q(status='DELIVERED') | Q(status = 'ITEM_RELEASED_CONFIRMED'),
         delivery__delivered_by=request.user
     ).order_by('-date_uploaded'))
 
@@ -250,9 +250,10 @@ def todays_deliveries(request):
     total_deliveries = Quote.objects.filter(
         Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL') |
         Q(status='ARRIVED') | Q(status='PARTIAL_DELIVERY'),
-        date_eta__day=this_day,
-        date_eta__month=this_month,
-        date_eta__year=this_year
+        # date_eta__day=this_day,
+        # date_eta__month=this_month,
+        # date_eta__year=this_year
+        date_eta = start_date
     )
 
     context = {
@@ -269,7 +270,7 @@ def awaiting_deliveries(request):
     reasons = ReasonNotToDeliver.objects.all()
 
     total_deliveries = list(Quote.objects.filter(
-        (Q(status='AWAITDELIVERY') | Q(status='PARTIAL_DELIVERY')
+        (Q(status='AWAITDELIVERY') | Q(status='PARTIAL_DELIVERY') | Q(status='ITEM_RELEASED')
          | Q(status='ARRIVED') | Q(status='PARTIAL_ARRIVAL')),
         #  | Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY')
         #  | Q(status='NOTDELIVERED')),
@@ -300,8 +301,9 @@ def days_deliveries(request, date_string):
         Q(status='AWAITDELIVERY') |
         Q(status='PAID_DELIVER') |
         Q(status='DELIVERED')),
-        date_eta=the_date
-    ).order_by('-date_uploaded'))
+        Q(status='ITEM_RELEASED')),
+        Q(status='ITEM_RELEASED_CONFIRMED')
+    ).order_by('-date_uploaded')
 
     # total_deliveries = list(Quote.objects.filter(
     #     # (Q(status='AWAITDELIVERY') | Q(status='DELIVERED')
@@ -332,7 +334,8 @@ def all_deliveries(request):
     total_deliveries = list(Quote.objects.filter(
         (Q(status='AWAITDELIVERY') | Q(status='DELIVERED')
          | Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY')
-         | Q(status='NOTDELIVERED') | Q(status='ARRIVED')),
+         | Q(status='NOTDELIVERED') | Q(status='ARRIVED'))
+         | Q(status='ITEM_RELEASED') | Q(status='ITEM_RELEASED_CONFIRMED'),
         delivery__delivered_by=request.user
     ).order_by('-date_uploaded'))
 
@@ -349,9 +352,12 @@ def all_deliveries(request):
 def dashboard_delivery(request):
 
     total_deliveries = list(Quote.objects.filter(
-        status='DELIVERED',
+        Q(status='DELIVERED') |
+          Q(status='ITEM_RELEASED_CONFIRMED'),
         delivery__delivered_by=request.user
     ).order_by('-date_uploaded'))
+
+    print(total_deliveries)
 
     this_year = timezone.now().year
     this_day = timezone.now().day
@@ -361,14 +367,18 @@ def dashboard_delivery(request):
     end_date = start_date + timedelta(days=+1)
     
     todays_deliveries = Quote.objects.filter(
-        Q(status='PARTIAL_ARRIVAL') | Q(
-            status='ARRIVED') | Q(status='PARTIAL_DELIVERY'),
+        Q(status='PARTIAL_ARRIVAL') |
+         Q( status='ARRIVED') |
+         Q( status='AWAITDELIVERY') |
+          Q(status='PARTIAL_DELIVERY') |
+          Q(status='ITEM_RELEASED'),
         date_eta = start_date
     )
 
     tomorrow_deliveries_items = Quote.objects.filter(
         Q(status='PARTIAL_ARRIVAL') | Q(
-            status='ARRIVED') | Q(status='PARTIAL_DELIVERY'),
+            status='ARRIVED') | Q(status='PARTIAL_DELIVERY') |
+            Q(status='ITEM_RELEASED'),
         date_eta__day=end_date.day,
         date_eta__month=end_date.month,
         date_eta__year=end_date.year
@@ -381,7 +391,10 @@ def dashboard_delivery(request):
         Q(status='PARTIAL_ARRIVAL') | Q(
             status='PARTIAL_DELIVERY') | Q(status='ARRIVED')
         | Q(status='AWAITDELIVERY')
+        | Q(status='ITEM_RELEASED')
     )
+
+    print(awaiting_delivery_quotes)
 
     unattended_quptes = Quote.objects.filter(
         status='NOTDELIVERED'
@@ -394,7 +407,9 @@ def dashboard_delivery(request):
         Q(status='ARRIVED') |
         Q(status='AWAITDELIVERY') |
         Q(status='PAID_DELIVER') |
-        Q(status='DELIVERED')
+        Q(status='DELIVERED') |
+        Q(status='ITEM_RELEASED_CONFIRMED') |
+        Q(status='ITEM_RELEASED')
         # if quote.status in ['PAID_DELIVER', 'AWAITDELIVERY', 'DELIVERED', 'NOTDELIVERED', 'PARTIAL_ARRIVAL']:
     )
 
@@ -427,7 +442,6 @@ def dashboard_delivery(request):
         date_format = year + "-" + month + "-" + day
         end_date_format = str(end_date_eta.year) + "-" + \
             str(end_date_eta.month) + "-" + str(end_date_eta.day)
-        print(end_date_format)
 
         date_string = str(date_eta.year) + "" + \
             str(date_eta.month) + "" + str(date_eta.day)
@@ -639,7 +653,7 @@ def sales_dashboard(request):
         end_date = date(this_year, i, total_days)
         months_quote = Quote.objects.filter(
             (Q(status='PAID_DELIVER') | Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')
-             | (Q(status='DELIVERED') | Q(status='NOTDELIVERED'))),
+             | (Q(status='DELIVERED') | Q(status='NOTDELIVERED'))) | Q(status='ITEM_RELEASED_CONFIRMED'),
             date_uploaded__gte=start_date,
             date_uploaded__lte=end_date,
             manager=request.user,
@@ -647,7 +661,7 @@ def sales_dashboard(request):
         months_data.append(months_quote.count())
 
     for quote in whole_quotes:
-        if quote.status in ['PAID_DELIVER', 'AWAITDELIVERY', 'DELIVERED', 'NOTDELIVERED', 'PARTIAL_ARRIVAL']:
+        if quote.status in ['PAID_DELIVER', 'AWAITDELIVERY', 'DELIVERED', 'NOTDELIVERED', 'PARTIAL_ARRIVAL', 'ITEM_RELEASED_CONFIRMED' ]:
             item_delivered = item_delivered + 1
             done_deals = done_deals + 1
 
@@ -669,7 +683,8 @@ def sales_dashboard(request):
 def done_deals_sales(request):
     my_quotes = Quote.objects.filter(
         (Q(status='PAID_DELIVER') | Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')
-         | (Q(status='DELIVERED'))),
+         | (Q(status='DELIVERED')))
+         | (Q(status='ITEM_RELEASED_CONFIRMED')),
         manager=request.user,
     )
 
@@ -685,7 +700,8 @@ def done_deals_sales(request):
 def pending_items_sales(request):
     my_quotes = Quote.objects.filter(
         (Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')  | Q(status='APRSNG')
-         | (Q(status='NOTDELIVERED'))),
+         | (Q(status='NOTDELIVERED')))
+         | (Q(status='ITEM_RELEASED')),
         manager=request.user,
     )
 

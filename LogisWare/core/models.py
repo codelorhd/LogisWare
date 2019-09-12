@@ -44,6 +44,8 @@ class Quote(models.Model):
         ('AWAITDELIVERY', 'Awaiting Delivery'),
         ('DELIVERED', 'Delivered'),
         ('NOTDELIVERED', 'Not Delivered'),
+        ('ITEM_RELEASED', 'Item Released'),
+        ('ITEM_RELEASED_CONFIRMED', 'Released Confirmed'), # should be only confirmed by the delivery team.
     ]
     status = models.CharField(
         max_length=20, choices=quote_statuses, default="APRSNG")
