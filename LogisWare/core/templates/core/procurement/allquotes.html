@@ -18,7 +18,7 @@
       <th>Client Name</th>
       <th>ETA</th>
       <th>Status</th>
-      <th>Description</th>
+      {% comment %} <th>Description</th> {% endcomment %}
       <th>Delivery Type</th>
       <th>Location</th>
       <th>Date Uploaded</th>
@@ -74,13 +74,14 @@
         
                       {% endif %}">{{ quote.get_status_display }}</span>
       </td>
-      <td> {% if quote.description != None %} {{ quote.description }} {% endif %} </td>
+      {% comment %} <td> {% if quote.description != None %} {{ quote.description }} {% endif %} </td> {% endcomment %}
       <td> {{ quote.delivery.get_delivery_type_display }} </td>
       <td> <label>{{ quote.delivery.delivery_location }}</label>
         (<label>{{ quote.delivery.delivery_state }}</label>) </td>
       <td> {{ quote.date_uploaded|date:"D d M Y" }} </td>
       <td>
-
+        <label>View quote for description</label>
+        <br />
         <div class="dropdown">
           <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -159,6 +160,12 @@
               </button>
             </div>
             <div class="modal-body">
+
+              <div class="form-group">
+                <label>Description</label>
+                <label>{{ quote.description }} </label>
+                <hr />
+              </div>
 
               <div class="form-group">
                 <label>Client Details</label> <br />
