@@ -1,15 +1,29 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegisterForm
+
+from rest_framework import viewsets
+
+from .serializers import UserSerializer
+
 # from .util import NewUserMessages
 
 # from addressbook.models import AddressBook, Tag
 
 
+class UsersViewset(viewsets.ReadOnlyModelViewSet):
+    """
+        This class can only be read and no edit can be done to it.
+    """
+    queryset = get_user_model().objects.all()
+    serializer_class = UserSerializer
+
+
 @login_required
-def login_success( request ):
+def login_success(request):
     redirect_to_url = "logout"
 
     # Check if this user is a super admin
@@ -21,7 +35,7 @@ def login_success( request ):
         pass
     else:
         if user.is_finance == True:
-            redirect_to_url = 'dashboard_finance'    
+            redirect_to_url = 'dashboard_finance'
         elif user.is_sales:
             redirect_to_url = "dashboard_sales"
         elif user.is_procurement == True:
@@ -29,10 +43,11 @@ def login_success( request ):
         elif user.is_delivery == True:
             redirect_to_url = "dashboard_delivery"
 
-    print( redirect_to_url )
+    print(redirect_to_url)
 
     # A link will be in the menu if one user has many roles
-    return redirect( redirect_to_url )
+    return redirect(redirect_to_url)
+
 
 def register(request):
 
@@ -55,11 +70,10 @@ def register(request):
             #     user.email, user.name, request, user)
             # new_user_messages_obj.send_email_verification_message(
             #     user.email, user.name, request, user)
-            
 
             # Create Smart Tag named Youth
             # Tag.objects.create(
-                
+
             # )
 
             messages.success(

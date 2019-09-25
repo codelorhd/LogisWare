@@ -9,8 +9,24 @@ from django.contrib.auth import views as auth_views
 
 from core import views as core_views
 from users import views as users_view
+from staffleave import views as staffleave_views
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView
+)
+
 
 urlpatterns = [
+
+    url('api/v1/', include("staffleave.urls")),
+
+    url(r'app', staffleave_views.home, name='staff_leave'),
+
+    path('api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # SALES TEAM
     path('sales', core_views.sales_dashboard, name='dashboard_sales'),
@@ -44,6 +60,10 @@ urlpatterns = [
          name='all_quotes_procurement'),
     path('procurement/quote/status/<int:quote_pk>/<str:status_code>',
          core_views.update_quote_prodcurement, name='update_quote_procurement'),
+    path('procurement/quote/add', core_views.add_quotes_sales,
+         name='add_quotes_procurement'),
+    path('procurement/quotes', core_views.all_quotes_sales,
+         name='all_quotes_procurement'),
 
     path('delivery', core_views.dashboard_delivery, name='dashboard_delivery'),
 

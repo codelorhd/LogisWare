@@ -18,7 +18,11 @@
                     </a>
                 </div>
                 <div>
+                    {% if user.is_human_resource %}
+                    <h1 class="nav-title text-white">Human Resource / Procurement Dashboard</h1>
+                    {% else %}
                     <h1 class="nav-title text-white">Procurement Dashboard</h1>
+                    {% endif %}
                 </div>
             </div>
         </div>

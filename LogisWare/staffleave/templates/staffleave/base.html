@@ -1,0 +1,23 @@
+{% extends 'staffleave/mainbase.html' %}
+
+{% block dashboad_type %}
+
+    <div class="navbar navbar-expand d-flex justify-content-between navbar-dark bd-navbar blue accent-2 ">
+        <div class="relative">
+            <div class="d-flex">
+                <div>
+                    <a href="#" data-toggle="offcanvas" class="paper-nav-toggle pp-nav-toggle">
+                        <i></i>
+                    </a>
+                </div>
+                <div>
+                    {% if user.is_human_resource %}
+                    <h1 class="nav-title text-white">Human Resource / Procurement Dashboard</h1>
+                    {% else %}
+                    <h1 class="nav-title text-white">Procurement Dashboard</h1>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

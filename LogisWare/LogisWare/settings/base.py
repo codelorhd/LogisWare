@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'communication.apps.CommunicationConfig',
     'core.apps.CoreConfig',
+    'staffleave.apps.StaffleaveConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -28,6 +29,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'axes',
+    'django_cron',
+    'imagefit',
+    'rest_framework',
+]
+
+
+AUTHENTICATION_BACKENDS = [
+    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
@@ -38,6 +53,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+
+    # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
+    # It only formats user lockout messages and renders Axes lockout responses
+    # on failed user authentication attempts from login views.
+    # If you do not want Axes to override the authentication response
+    # you can skip installing the middleware and use your own views.
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'LogisWare.urls'
@@ -102,6 +125,24 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # Login for the apps
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # // https://github.com/davesque/django-rest-framework-simplejwt
+
+        # Allow login from the browser
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -118,7 +159,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+  os.path.join(BASE_DIR, 'static/'),
+)
+
 MEDIA_URL = '/media/'
 AUTH_USER_MODEL = "users.User"
 TIME_ZONE = 'Africa/Lagos'
@@ -139,6 +184,12 @@ EMAIL_HOST_USER = "logiswarechert@gmail.com"
 EMAIL_HOST_PASSWORD = 'logisware2019'
 DEFAULT_FROM_EMAIL = "logiswarechert@gmail.com"
 
+
+# DJANGO AXES: For Password Policy
+AXES_ENABLED = True
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 48  # Hours
+# AXES_LOCKOUT_URL
 
 #mysql_root: is82k2kdjd82j2
 

@@ -345,7 +345,12 @@ def all_deliveries(request):
         'total_quotes': len(total_deliveries),
     }
 
-    return render(request, 'core/delivery/alldeliveries.html', context)
+    if (request.user.is_human_resource):
+        return render(request, 'core/procurement/all_deliveries.html', context)
+    else:
+        return render(request, 'core/delivery/alldeliveries.html', context)
+
+
 
 
 @login_required
@@ -724,7 +729,11 @@ def all_quotes_sales(request):
         'total_quotes': len(my_quotes),
     }
 
-    return render(request, 'core/sales/allquotes.html', context)
+    if(request.user.is_procurement):
+        return render(request, 'core/procurement/allquotes.html', context)
+    else:
+        return render(request, 'core/sales/allquotes.html', context)
+
 
 
 @login_required
@@ -807,7 +816,6 @@ class ClientView(ListView):
 @login_required
 @require_http_methods(['POST'])
 def insert_quote(request):
-    print(request.POST)
     contact_name = str(request.POST.get('contact_name', None)).strip()
     phone_one = request.POST.get('phone_one', None)
     # company_name = request.POST.get('company_name', None)
@@ -836,7 +844,6 @@ def insert_quote(request):
 
         # expected year-mm-dd
         date_eta = parse_date(eta)
-        print(date_eta)
 
         if(date.today() > date_eta):
             messages.error(
@@ -883,7 +890,11 @@ def insert_quote(request):
             request,
             "Your Quote has been saved"
         )
-        return redirect('all_quotes_sales')
+
+        if(request.user.is_procurement):
+            return redirect('all_quotes_procurement')
+        else:
+            return redirect('all_quotes_sales')
 
     else:
         messages.error(

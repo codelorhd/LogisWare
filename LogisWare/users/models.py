@@ -35,12 +35,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=255
     )
 
-    is_super_admin = models.BooleanField( default = False )
-    
-    is_finance = models.BooleanField( default = False );
-    is_sales   = models.BooleanField( default = True );
-    is_procurement = models.BooleanField( default = False )
-    is_delivery    = models.BooleanField( default = False )
+    is_super_admin = models.BooleanField(default=False)
+
+    # Special Roles;
+    is_sales = models.BooleanField(default=True)
+    is_procurement = models.BooleanField(default=False)
+    is_delivery = models.BooleanField(default=False)
+    is_human_resource = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     objects = CustomUserManager()

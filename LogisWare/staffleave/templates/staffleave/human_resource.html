@@ -1,0 +1,127 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="eng"  >
+
+<head data-index="{{ access_token }}" data-control="{{ refresh_token }}" >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="auth/or" content="">
+    <link rel="icon" href="assets/img/basic/favicon.ico" type="image/x-icon">
+    <title>CHERT System Solution : Logistic</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'core/assets/css/app.css' %}">
+    <link href="{% static 'plugins/footable-bootstrap/css/footable.standalone.min.css' %}" rel="styleshee" />
+    {% block styles %}
+
+    {% endblock styles %}
+    <style>
+        .app {
+            background: #65261e;
+        }
+
+        .loader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #F5F8FA;
+            z-index: 9998;
+            text-align: center;
+        }
+
+        .plane-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+    </style>
+</head>
+
+<body class="light">
+    <!-- Pre loader -->
+    <div id="loader" class="loader">
+        <div class="plane-container">
+            <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-yellow">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app">
+        <div id="webapp">
+            <!-- webapp content goes here -->
+        </div>
+
+    </div>
+
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg shadow white fixed"></div>
+    </div>
+    <!--/#app -->
+    <script src="{% static 'core/assets/js/app.js' %}"></script>
+
+    {% comment %}
+    <!-- load js before you close the body, this way all the dom element must have been loaded -->
+    {% endcomment %} {% if debug %}
+    <script src="http://localhost:35730/livereload.js"></script>
+    {% endif %}
+    <script src="{% static 'plugins/footable-bootstrap/js/footable.min.js' %}"></script>
+    <script src="{% static 'webapp/dist/app.bundle.js' %}"></script>
+    <script>
+        $('.footable').footable();
+    </script>
+
+
+</body>
+
+</html>

@@ -3,3 +3,5 @@ ecaps-admin-dashboard-template
 paperadmin-101
 *.sqlite3
 LogisWare/.vscode
+.directory
+.vscode

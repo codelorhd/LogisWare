@@ -1,0 +1,315 @@
+{% extends 'core/procurement/base.html' %} {% block content %}
+
+{% block styles %}
+  
+    <style>
+        .dataTables_wrapper{
+            height: 1800px !important;
+        }
+    </style>
+
+{% endblock styles %}
+
+<table
+  class="table table-bordered table-hover data-tables"
+  data-options='{"searching":true, "pageLength": "100", "ordering": false}'
+>
+  <thead>
+    <tr>
+      <th>Quote Number</th>
+      <th>Location </th>
+      <th>ETA</th>
+      <th>Status</th>
+      {% comment %} <th>Description</th> {% endcomment %}
+      <th>Type</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for quote in deliveries  %}
+      <tr>
+          <td> {{ quote.quote_number }} </td>
+          <td> {{ quote.delivery.delivery_location }}
+          {% if quote.client %}
+          <br /> <br />
+          <strong>Client's Details</strong> <br />
+           {{ quote.client.name }}
+          <br />
+           {{ quote.client.phone_one }}
+          <br />
+           {{ quote.client.email }}
+          {% endif %}
+            </td>
+          <td> {{ quote.date_eta|date:"D d M Y" }} </td>
+          <td class="text-center" > 
+              <span class="badge 
+               {% if quote.status == 'APRSNG' %}
+                      badge-dark
+        
+                      {% elif quote.status == 'AWAARIVAL' %}
+                      badge-warning
+                      
+                      {% elif quote.status == 'ARRIVED' %}
+                      badge-danger
+                 
+                      {% elif quote.status == 'PENDING_FINANCE' %}
+                      badge-primary
+        
+                      {% elif quote.status == 'NOTPAID_DELIVER' %}
+                      badge-warning
+
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-danger
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
+                      badge-success
+
+                      {% elif quote.status == 'PAID_DELIVER' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'AWAITDELIVERY' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'DELIVERED' %}
+                      badge-success
+        
+                      {% elif quote.status == 'NOTDELIVERED' %}
+                      badge-dark
+
+                      {% elif quote.status == 'ITEM_RELEASED' %}
+                      badge-warning
+
+                      {% elif quote.status == 'ITEM_RELEASED_CONFIRMED' %}
+                      badge-success
+        
+                      {% endif %}">{{ quote.get_status_display }}</span>
+          </td>
+          {% comment %} <td> {% if quote.description != None %} {{ quote.description }} {% endif %} </td> {% endcomment %}
+          <td> {{ quote.delivery.get_delivery_type_display }} </td>
+          <td>
+  <small>View quote for description </small>
+<div  class="dropdown">
+  <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Quote Actions
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" data-toggle="modal" data-target="#view-quote{{ quote.id }}"
+                  href="#view-quote{{ quote.id }}" >View Quote</a>
+      
+  </div>
+</div>
+              </td>
+            <!-- Modal -->
+            <div class="modal fade" id="view-quote{{ quote.id }}" tabindex="-1" role="dialog" aria-labelledby="view-quote{{ quote.id }}Label" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="view-quote{{ quote.id }}"> Quote Number: {{ quote.quote_number }} <span class="badge 
+                       {% if quote.status == 'APRSNG' %}
+                      badge-dark
+        
+                      {% elif quote.status == 'AWAARIVAL' %}
+                      badge-warning
+                      
+                      {% elif quote.status == 'ARRIVED' %}
+                      badge-danger
+                 
+                      {% elif quote.status == 'PENDING_FINANCE' %}
+                      badge-primary
+        
+                      {% elif quote.status == 'NOTPAID_DELIVER' %}
+                      badge-warning
+
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-danger
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
+                      badge-success
+
+                      {% elif quote.status == 'PAID_DELIVER' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'AWAITDELIVERY' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'DELIVERED' %}
+                      badge-success
+        
+                      {% elif quote.status == 'NOTDELIVERED' %}
+                      badge-dark
+
+                      {% elif quote.status == 'ITEM_RELEASED' %}
+                      badge-warning
+
+                      {% elif quote.status == 'ITEM_RELEASED_CONFIRMED' %}
+                      badge-success
+        
+                      {% endif %}">{{ quote.get_status_display }}</span> </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="form-group">
+                      <label>Description</label> <br />
+                      <label> {{ quote.description }} </label>
+                      <hr />
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>Client Details</label> <br />
+                      <label> {{ quote.client.name }} </label> <br />
+                      <label> {{ quote.client.phone_one }} </label> <br />
+                      <label> {{ quote.client.email }} </label> <br />
+                      <hr />
+                    </div>
+
+
+                    <div class="form-group">
+                      <label>Client Manager (CHERT)</label> <br />
+                      <label> {{ quote.manager.name }} </label> <br />
+                      <label> {{ quote.manager.email }} </label> <br />
+                      <hr />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Delivery</label><br />
+                      <label>{{ quote.delivery.delivery_location }}</label><br />
+                      <label>{{ quote.delivery.delivery_state }}</label><br />
+                      <label>Delivery Type</label> <br />
+                      <label>{{ quote.delivery.get_delivery_type_display }}</label><br />
+                      {% if quote.delivery.delivered_by.name %}
+                        <label>Delivered By</label><br />
+                        <label>{{ quote.delivery.delivered_by.name }}</label> <br />
+                        <label>Date Delivered</label><br />
+                        <label>{{ quote.delivery.date_delivered|date:"D d M Y" }}</label>
+                      {% endif %}
+
+                      {% if quote.status == 'NOTDELIVERED' %}
+                        <br />
+                        <label>Reason for not delivery</label><br />
+                        <label>{{ quote.delivery.not_delivered_why }}</label>
+                      {% endif %}
+                      
+
+                    </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="notdelivered{{ quote.id }}" tabindex="-1" role="dialog" aria-labelledby="notdelivered{{ quote.id }}Label" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="notdelivere{{ quote.id }}"> Quote Number: {{ quote.quote_number }} <span class="badge 
+                      {% if quote.status == 'APRSNG' %}
+                      badge-dark
+        
+                      {% elif quote.status == 'AWAARIVAL' %}
+                      badge-warning
+                      
+                      {% elif quote.status == 'ARRIVED' %}
+                      badge-danger
+                 
+                      {% elif quote.status == 'PENDING_FINANCE' %}
+                      badge-primary
+        
+                      {% elif quote.status == 'NOTPAID_DELIVER' %}
+                      badge-warning
+
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-danger
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
+                      badge-success
+
+                      {% elif quote.status == 'PAID_DELIVER' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'AWAITDELIVERY' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'DELIVERED' %}
+                      badge-success
+        
+                      {% elif quote.status == 'NOTDELIVERED' %}
+                      badge-dark
+
+                      {% elif quote.status == 'ITEM_RELEASED' %}
+                      badge-warning
+
+                      {% elif quote.status == 'ITEM_RELEASED_CONFIRMED' %}
+                      badge-success
+        
+                      {% endif %}">{{ quote.get_status_display }}</span> </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    
+                  <form id="form{{ quote.id }}" action="{% url 'mark_items_not_delivered' %}" method="POST" >
+                      <input type="hidden" name="quote_id" value="{{ quote.id }}" >
+
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label>Why are you not delivering the item(s)?</label>
+                        <select name="reason" required="true" class="form-control">
+                          <option value="">----------------------</option>
+                          {% for reason in reasons  %}
+                            <option value="{{ reason.id }}" >{{ reason }}</option>
+                          {% endfor %}
+                          <option value="-1">Others</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label>Others, please specify</label><br />
+                        <small style="color: red" >If you chose Others and you didn't specify the main reason beneath, the system will not mark this quote not delivered delivered.</small>
+                        <textarea name="other_reasons" placeholder="Write ..." class="form-control" ></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Mark Not Delivered</button>
+                      </div>
+
+                    </form>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+      </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+  <script>
+    
+      $('.submit_form').on('click', function(e){
+        var dataIndex = $(this).attr('data-index');
+        
+        $('form' + dataIndex).submit();
+      });
+
+  </script>
+  
+{% endblock scripts %}
