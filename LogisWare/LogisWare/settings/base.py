@@ -53,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    'core.middlewares.filter_users.FilterUserMiddleware',
 
 
     # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
@@ -183,7 +185,6 @@ USE_TZ = True
 EMAIL_HOST_USER = "logiswarechert@gmail.com"
 EMAIL_HOST_PASSWORD = 'logisware2019'
 DEFAULT_FROM_EMAIL = "logiswarechert@gmail.com"
-
 
 # DJANGO AXES: For Password Policy
 AXES_ENABLED = True

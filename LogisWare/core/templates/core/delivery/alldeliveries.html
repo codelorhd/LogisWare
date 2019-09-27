@@ -40,7 +40,16 @@
            {{ quote.client.email }}
           {% endif %}
             </td>
-          <td> {{ quote.date_eta|date:"D d M Y" }} </td>
+
+            <td>
+              {% if quote.new_eta_set == True %}
+            <label>{{ quote.new_eta|date:"d/m/Y" }} </label> <br /><br />
+            <label>Initial ETA</label><br />
+            {{ quote.date_eta|date:"d/m/Y" }} 
+              {% else %}
+            {{ quote.date_eta|date:"d/m/Y" }} 
+              {% endif %}
+              </td>
           <td class="text-center" > 
               <span class="badge 
                {% if quote.status == 'APRSNG' %}

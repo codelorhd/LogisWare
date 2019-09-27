@@ -14,12 +14,18 @@
   </thead>
   <tbody>
     {% for quote in quotes  %}
-      <tr>
-          <td> {{ quote.quote_number }} </td>
-          <td> {{ quote.client.name }} </td>
-          <td> {{ quote.date_eta|date:"D d M Y" }} </td>
-          <td class="text-center" > 
-              <span class="badge 
+    <tr>
+      <td> {{ quote.quote_number }} </td>
+      <td> {{ quote.client.name }} </td>
+      <td>
+        {% if quote.new_eta_set == True %}
+       <label>{{ quote.new_eta|date:"d/m/Y" }} </label> <br />
+        {% else %}
+       {{ quote.date_eta|date:"d/m/Y" }} 
+        {% endif %}
+        </td>
+      <td class="text-center">
+        <span class="badge 
                {% if quote.status == 'APRSNG' %}
                       badge-dark
         
@@ -60,24 +66,37 @@
                       badge-success
         
                       {% endif %}">{{ quote.get_status_display }}</span>
-          </td>
-          <td> {{ quote.date_uploaded|date:"D d M Y" }} </td>
-          <td>
-                <a
-                data-toggle="modal"
-                  data-target="#view-quote{{ quote.id }}"
-                  href="#view-quote{{ quote.id }}"
-                >
-                  <i class="icon-share-square-o text-success"></i>
-                </a>
-              </td>
+      </td>
+      <td> {{ quote.date_uploaded|date:"D d M Y" }} </td>
+      <td>
+        <a data-toggle="modal" data-target="#view-quote{{ quote.id }}" href="#view-quote{{ quote.id }}"
+          data-toggle="tooltip" data-placement="top" title="View Quote Details">
+          <i class="icon-share-square-o text-success"></i>
+        </a>
 
-            <!-- Modal -->
-            <div class="modal fade" id="view-quote{{ quote.id }}" tabindex="-1" role="dialog" aria-labelledby="view-quote{{ quote.id }}Label" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="view-quote{{ quote.id }}"> Quote Number: {{ quote.quote_number }} <span class="badge 
+        {% if quote.status == 'APRSNG' or quote.status == 'AWAARIVAL' %}
+        <a data-toggle="modal" data-target="#extend-eta-{{ quote.id }}" data-toggle="tooltip" data-placement="top"
+          title="Extend ETA" href="#extend-eta-{{ quote.id }}">
+          <i class="icon-date_range text-danger"></i>
+        </a>
+        {% endif %}
+
+        {% if quote.status == 'APRSNG' %}
+        <a data-toggle="tooltip" data-placement="top"
+          title="Edit Quote" href="{% url 'edit_quote' quote.id %}">
+          <i class="icon-edit text-info"></i>
+        </a>
+        {% endif %}
+
+      </td>
+
+      <!-- Modal -->
+      <div class="modal fade" id="view-quote{{ quote.id }}" tabindex="-1" role="dialog"
+        aria-labelledby="view-quote{{ quote.id }}Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="view-quote{{ quote.id }}"> Quote Number: {{ quote.quote_number }} <span class="badge 
                        {% if quote.status == 'APRSNG' %}
                       badge-dark
         
@@ -118,49 +137,140 @@
                       badge-success
         
                       {% endif %}">{{ quote.get_status_display }}</span> </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    
-                    <div class="form-group">
-                      <label>Description</label> <br />
-                      <label>{{ quote.description }} </label>
-                      <hr />
-                    </div>
-
-                    <div class="form-group">
-                      <label>Client Details</label> <br />
-                      <label> {{ quote.client.name }} </label> <br />
-                      <label> {{ quote.client.phone_one }} </label> <br />
-                      <label> {{ quote.client.email }} </label> <br />
-                      <hr />
-                    </div>
-
-                    <div class="form-group">
-                      <label>Delivery</label><br />
-                      <label>{{ quote.delivery.delivery_location }}</label><br />
-                      <label>{{ quote.delivery.delivery_state }}</label><br />
-                      <label>Delivery Type</label> <br />
-                      <label>{{ quote.delivery.get_delivery_type_display }}</label>
-                      {% if quote.delivery.delivered_by %}<br /><br />
-                        <label>Delivered By</label><br />
-                        <label>{{ quote.delivery.delivered_by.name }}</label> <br />
-                        <label>Date Delivered</label><br />
-                        <label>{{ quote.delivery.date_delivered|date:"D d M Y" }}</label>
-                      {% endif %}
-                    </div>
-
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
+            <div class="modal-body">
 
-      </tr>
+              <div class="form-group">
+                <label>Description</label> <br />
+                <label>{{ quote.description }} </label>
+                <hr />
+              </div>
+
+              <div class="form-group">
+                <label>Client Details</label> <br />
+                <label> {{ quote.client.name }} </label> <br />
+                <label> {{ quote.client.phone_one }} </label> <br />
+                <label> {{ quote.client.email }} </label> <br />
+                <hr />
+              </div>
+
+              <div class="form-group">
+                <label>Delivery</label><br />
+                <label>{{ quote.delivery.delivery_location }}</label><br />
+                <label>{{ quote.delivery.delivery_state }}</label><br />
+                <label>Delivery Type</label> <br />
+                <label>{{ quote.delivery.get_delivery_type_display }}</label>
+                {% if quote.delivery.delivered_by %}<br /><br />
+                <label>Delivered By</label><br />
+                <label>{{ quote.delivery.delivered_by.name }}</label> <br />
+                <label>Date Delivered</label><br />
+                <label>{{ quote.delivery.date_delivered|date:"D d M Y" }}</label>
+                {% endif %}
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Modal -->
+
+      <!-- Modal -->
+      <div class="modal fade" id="extend-eta-{{ quote.id }}" tabindex="-1" role="dialog"
+        aria-labelledby="extend-eta{{ quote.id }}Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="view-quote{{ quote.id }}"> Extend ETA: Quote {{ quote.quote_number }} <span
+                  class="badge 
+                       {% if quote.status == 'APRSNG' %}
+                      badge-dark
+        
+                      {% elif quote.status == 'AWAARIVAL' %}
+                      badge-warning
+                      
+                      {% elif quote.status == 'ARRIVED' %}
+                      badge-danger
+                 
+                      {% elif quote.status == 'PENDING_FINANCE' %}
+                      badge-primary
+        
+                      {% elif quote.status == 'NOTPAID_DELIVER' %}
+                      badge-warning
+
+                      {% elif quote.status == 'PARTIAL_ARRIVAL' %}
+                      badge-danger
+                
+                      {% elif quote.status == 'PARTIAL_DELIVERY' %}
+                      badge-success
+
+                      {% elif quote.status == 'PAID_DELIVER' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'AWAITDELIVERY' %}
+                      badge-warning
+             
+                      {% elif quote.status == 'DELIVERED' %}
+                      badge-success
+        
+                      {% elif quote.status == 'NOTDELIVERED' %}
+                      badge-dark
+
+                      {% elif quote.status == 'ITEM_RELEASED' %}
+                      badge-warning
+
+                      {% elif quote.status == 'ITEM_RELEASED_CONFIRMED' %}
+                      badge-success
+        
+                      {% endif %}">{{ quote.get_status_display }}</span> </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <div class="form-group">
+                <label>Current ETA</label> <br />
+                {% if quote.new_eta_set %}
+                <label>{{ quote.new_eta }} </label>
+                {% else %}
+                <label>{{ quote.date_eta }} </label>
+                {% endif %}
+                <hr />
+              </div>
+              <form method="POST" action="{% url 'extend_eta' quote.id %}" >
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="label-control">New ETA</label> <br />
+                  <input class="date-time-picker form-control form-control-lg" placeholder="Select a new date"
+                    data-options='{
+                    "theme":"light",
+                    "format":"Y-m-d",
+                    "timepicker": false
+                    }' name="new_eta" />
+                </div>
+
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+
+              </form>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Modal -->
+
+    </tr>
     {% endfor %}
 
   </tbody>

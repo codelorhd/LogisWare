@@ -131,27 +131,31 @@ class StaffView extends Component {
                                 <tbody>
                                     {
                                         this.props.staff_list.map((item, index) => {
-                                            return (<tr key={index} >
-                                                <td>{++index}</td>
-                                                <td>{item.user_data.name}</td>
-                                                <td>{item.user_data.email}</td>
-                                                <td>
-                                                    <div className="btn-group">
-                                                        <button type="button" className="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
+                                            return (
+                                                // item.user_data != undefined ?
+                                                    <tr key={index} >
+                                                        <td>{++index}</td>
+                                                            <td>{item.user_data.name}</td>
+                                                        <td>{item.user_data.email}</td>
+                                                        <td>
+                                                            <div className="btn-group">
+                                                                <button type="button" className="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    Action
                                                         </button>
-                                                        <div className="dropdown-menu">
-                                                            <Link className="dropdown-item" to={`/app/staff/edit/${item.id}`}>
-                                                                Edit
+                                                                <div className="dropdown-menu">
+                                                                    <Link className="dropdown-item" to={`/app/staff/edit/${item.id}`}>
+                                                                        Edit
                                                             </Link>
-                                                            <Link to={`/app/staff/delete/${item.id}`}>
-                                                                <i className="dropdown-item">Delete</i>
-                                                            </Link>
-                                                        </div>
-                                                    </div>
+                                                                    <Link to={`/app/staff/delete/${item.id}`}>
+                                                                        <i className="dropdown-item">Delete</i>
+                                                                    </Link>
+                                                                </div>
+                                                            </div>
 
-                                                </td>
-                                            </tr>);
+                                                        </td>
+                                                    </tr> 
+                                                    // : null
+                                                    );
                                         })
                                     }
                                 </tbody>

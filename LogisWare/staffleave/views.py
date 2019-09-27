@@ -14,6 +14,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
+from rest_framework.decorators import api_view
 
 
 from django.utils.crypto import get_random_string
@@ -45,6 +46,30 @@ def home(request):
     context['refresh_token'] = token['refresh']
 
     return render(request, 'staffleave/human_resource.html', context)
+
+# API VIEWS
+
+
+@api_view(["GET"])
+def get_current_user(request):
+    import json
+
+    user = request.user
+
+    message = {
+        "id": user.id,
+        "is_delivery": user.is_delivery,
+        "is_sales": user.is_sales,
+        "is_procurement": user.is_procurement,
+        "is_human_resource": user.is_human_resource,
+        "name": user.name,
+        "email": user.email,
+        "is_active": user.is_active,
+    }
+
+    return Response(message, status=status.HTTP_200_OK, headers={})
+
+# END OF API VIEWS
 
 
 class StaffViewset(viewsets.ModelViewSet):

@@ -30,18 +30,12 @@ def login_success(request):
 
     user = request.user
 
-    if user.is_super_admin and user.is_delivery == False:
-        # redirect_to_url = 'dashboard_superadmin'
-        pass
-    else:
-        if user.is_finance == True:
-            redirect_to_url = 'dashboard_finance'
-        elif user.is_sales:
-            redirect_to_url = "dashboard_sales"
-        elif user.is_procurement == True:
-            redirect_to_url = "dashboard_procurement"
-        elif user.is_delivery == True:
-            redirect_to_url = "dashboard_delivery"
+    if user.is_sales:
+        redirect_to_url = "dashboard_sales"
+    elif user.is_procurement == True:
+        redirect_to_url = "dashboard_procurement"
+    elif user.is_delivery == True:
+        redirect_to_url = "dashboard_delivery"
 
     print(redirect_to_url)
 

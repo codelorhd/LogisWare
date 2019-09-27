@@ -25,6 +25,8 @@ class Quote(models.Model):
         get_user_model(), on_delete=models.SET_NULL, null=True, blank=False)
 
     date_uploaded = models.DateTimeField(default=timezone.now)
+    new_eta_set = models.BooleanField(default=False)
+    new_eta = models.DateField(blank=False, null=False, default=timezone.now)
     date_eta = models.DateTimeField(
         blank=True, null=True, default=timezone.now)
     quote_number = models.CharField(max_length=15)
@@ -45,12 +47,13 @@ class Quote(models.Model):
         ('DELIVERED', 'Delivered'),
         ('NOTDELIVERED', 'Not Delivered'),
         ('ITEM_RELEASED', 'Item Released'),
-        ('ITEM_RELEASED_CONFIRMED', 'Released Confirmed'), # should be only confirmed by the delivery team.
+        # should be only confirmed by the delivery team.
+        ('ITEM_RELEASED_CONFIRMED', 'Released Confirmed'),
     ]
     status = models.CharField(
         max_length=20, choices=quote_statuses, default="APRSNG")
-    
-    description = models.TextField(null= True, blank = True )
+
+    description = models.TextField(null=True, blank=True)
 
     # reference = models.CharField(max_length=1000)
 

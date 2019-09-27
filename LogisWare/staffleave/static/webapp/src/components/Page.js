@@ -4,6 +4,8 @@ import SideMenu from './includes/SideMenu';
 import Routes from '../routes';
 
 class Page extends Component {
+
+
     state = {}
     render() {
         return (<Router>
@@ -79,10 +81,10 @@ class Page extends Component {
                 </div>
 
                 <div className="animatedParent animateOnce">
-                        <div className="container-fluid my-3">
-                            <Routes />
-                        </div>
+                    <div className="container-fluid my-3">
+                        <Routes />
                     </div>
+                </div>
 
             </div>
 

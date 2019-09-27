@@ -32,12 +32,19 @@ urlpatterns = [
     path('sales', core_views.sales_dashboard, name='dashboard_sales'),
     path('quotes', core_views.all_quotes_sales, name='all_quotes_sales'),
     path('quotes/add', core_views.add_quotes_sales, name='add_quotes_sales'),
+    path('quotes/edit/<int:pk>', core_views.edit_quote, name='edit_quote'),
     path('quotes/insert', core_views.insert_quote, name='insert_quote'),
     path('quotes/items/<int:pk>', core_views.QuoteDetailView.as_view(),
          name='all_quotes_items_sales'),
     path('quotes/remove/<int:pk>/<int:qid>',
          core_views.delete_quote_item, name='remove_quotes_items_sales'),
     path('clients', core_views.ClientView.as_view(), name='my_clients_sales'),
+
+
+    path('quotes/modify/<int:pk>',
+         core_views.edit_quote_apply, name='edit_quote_apply'),
+    path('quotes/extend/eta/<int:pk>',
+         core_views.extend_eta, name='extend_eta'),
 
     path('quotes', core_views.all_quotes_sales,
          name='total_quotes_sales'),
@@ -91,6 +98,7 @@ urlpatterns = [
          core_views.deactivate_user, name='deactivate_user'),
     path('users/activate_user/<int:pk>',
          core_views.activate_user, name='activate_user'),
+
 
 
     path('admin/', admin.site.urls),

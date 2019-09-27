@@ -4,11 +4,13 @@ import leave_reducers from '../reducers/leave_reducers';
 import general from '../reducers/general_reducer';
 import department from '../reducers/department_reducer';
 import staff from '../reducers/staff_reducer';
+import currentUser from '../reducers/current_user_reducer';
 
 export default combineReducers({
   form: formReducer,
   leaveReducers: leave_reducers,
   generalReducers: general,
   departmentReducers: department,
-  staffReducer: staff
+  staffReducer: staff,
+  currentUserReducer: currentUser
 });

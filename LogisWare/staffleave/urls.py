@@ -17,9 +17,12 @@ router.register(r'staff', staffleave_views.StaffViewset)
 router.register(r'types', staffleave_views.LeaveTypeViewset)
 router.register(r'departments', staffleave_views.DepartmentViewset)
 
+
 # register another routers
 
 urlpatterns = [
+    url(r'users/current', staffleave_views.get_current_user, name="get_current_user_api"),
+
 ]
 
 urlpatterns = urlpatterns + router.urls

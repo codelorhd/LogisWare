@@ -1,10 +1,9 @@
-{% extends 'core/procurement/base.html' %}{% block content %}
+{% extends 'core/sales/base.html' %}{% block content %}
 
 
 
-  <form id="submit_data" method="POST" action="{% url 'insert_quote' %}">
+  <form id="submit_data" method="POST" action="{% url 'edit_quote_apply' quote.id %}">
     {% csrf_token %}
-
 
 
 
@@ -28,6 +27,7 @@
                   autocomplete="off"
                   class="form-control form-control-lg"
                   type="text"
+                  value="{{ quote.quote_number }}"
                   placeholder="Quote Number"
                 />
               </div>
@@ -41,7 +41,7 @@
                 <input
                   required
                   id="quote_number"
-                  
+                  value="{{ quote.client.name }}"
                   name="contact_name"
                   class="form-control form-control-lg"
                   type="text"
@@ -55,6 +55,7 @@
                   
                   name="phone_one"
                   required
+                  value="{{ quote.client.phone_one }}"
                   class="form-control form-control-lg"
                   type="number"
                   maxlength="13"
@@ -65,7 +66,7 @@
               <div class="form-group">
                 <label>Email Address </label>
                 <input
-                  
+                  value="{{ quote.client.email }}"
                   type="email"
                   name="email"
                   class="form-control form-control-lg"
@@ -73,20 +74,9 @@
                 />
               </div>
 
-              <div class="form-group">
-                <label>ETA * </label>
-                <input
-                  
-                  type="date"
-                  name="eta"
-                  class="form-control form-control-lg"
-                  required="true"
-                />
-              </div>
-
               <div class="form-group" >
                 <label>Description</label>
-                <textarea maxlength="200" rows="5" placeholder="A short description of the items to be expected in this quote? (200 Characters)" name="description" class="form-control" required="true" ></textarea>
+                <textarea maxlength="200" rows="5" placeholder="A short description of the items to be expected in this quote? (200 Characters)" name="description" class="form-control" required="true" >{{ quote.description }}</textarea>
               </div>
 
 
@@ -95,8 +85,8 @@
               <div class="form-group">
                 <label>Delivery Type * </label>
                 <select id="delivery_type" class="form-control" name="delivery_type">
-                  <option value="PICK_UP">Pick Up</option>
-                  <option value="DELIVER">We Deliver</option>
+                  <option {% if quote.delivery == "PICK_UP" %} {{ "selected" }} {% endif %}  value="PICK_UP">Pick Up</option>
+                  <option {% if quote.delivery == "DELIVER" %} {{ "selected" }} {% endif %} value="DELIVER">We Deliver</option>
                 </select>
               </div>
 
@@ -106,7 +96,7 @@
                   id="delivery_location"
                   name="delivery_location"
                   class="form-control"
-                  value="CHERT SYSTEM SOLUTIONS"
+                  value="{{ quote.delivery.delivery_location }}"
                   required="true"
                 />
               </div>
@@ -115,7 +105,7 @@
     <label>Delivery State * </label>
                 <select name="delivery_state" class="form-control">
                   {% for state in states  %}
-                    <option value="{{ state.id }}"
+                    <option {% if quote.delivery.delivery_state == state.id %} {{ "selected" }} {% endif %}  value="{{ state.id }}"
                     {% if "Lagos" in state.name %}
                       selected
                     {% endif %}

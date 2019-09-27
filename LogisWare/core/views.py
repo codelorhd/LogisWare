@@ -187,7 +187,7 @@ def update_quote_delivery(request, quote_pk, status_code):
     quote.status = status_code
     quote.save()
 
-    if status_code == 'DELIVERED' or status_code == 'ITEM_RELEASED_CONFIRMED' :
+    if status_code == 'DELIVERED' or status_code == 'ITEM_RELEASED_CONFIRMED':
         delivery = quote.delivery
         delivery.date_delivered = timezone.now()
         delivery.delivered_by = request.user
@@ -206,7 +206,7 @@ def total_delivered(request):
     reasons = ReasonNotToDeliver.objects.all()
 
     total_deliveries = list(Quote.objects.filter(
-        Q(status='DELIVERED') | Q(status = 'ITEM_RELEASED_CONFIRMED'),
+        Q(status='DELIVERED') | Q(status='ITEM_RELEASED_CONFIRMED'),
         delivery__delivered_by=request.user
     ).order_by('-date_uploaded'))
 
@@ -253,7 +253,7 @@ def todays_deliveries(request):
         # date_eta__day=this_day,
         # date_eta__month=this_month,
         # date_eta__year=this_year
-        date_eta = start_date
+        date_eta=start_date
     )
 
     context = {
@@ -296,11 +296,11 @@ def days_deliveries(request, date_string):
 
     total_deliveries = list(Quote.objects.filter(
         (Q(status='PARTIAL_ARRIVAL') |
-        Q(status='PARTIAL_DELIVERY') |
-        Q(status='ARRIVED') |
-        Q(status='AWAITDELIVERY') |
-        Q(status='PAID_DELIVER') |
-        Q(status='DELIVERED')),
+         Q(status='PARTIAL_DELIVERY') |
+         Q(status='ARRIVED') |
+         Q(status='AWAITDELIVERY') |
+         Q(status='PAID_DELIVER') |
+         Q(status='DELIVERED')),
         Q(status='ITEM_RELEASED')),
         Q(status='ITEM_RELEASED_CONFIRMED')
     ).order_by('-date_uploaded')
@@ -335,7 +335,7 @@ def all_deliveries(request):
         (Q(status='AWAITDELIVERY') | Q(status='DELIVERED')
          | Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY')
          | Q(status='NOTDELIVERED') | Q(status='ARRIVED'))
-         | Q(status='ITEM_RELEASED') | Q(status='ITEM_RELEASED_CONFIRMED'),
+        | Q(status='ITEM_RELEASED') | Q(status='ITEM_RELEASED_CONFIRMED'),
         delivery__delivered_by=request.user
     ).order_by('-date_uploaded'))
 
@@ -351,14 +351,12 @@ def all_deliveries(request):
         return render(request, 'core/delivery/alldeliveries.html', context)
 
 
-
-
 @login_required
 def dashboard_delivery(request):
 
     total_deliveries = list(Quote.objects.filter(
         Q(status='DELIVERED') |
-          Q(status='ITEM_RELEASED_CONFIRMED'),
+        Q(status='ITEM_RELEASED_CONFIRMED'),
         delivery__delivered_by=request.user
     ).order_by('-date_uploaded'))
 
@@ -370,20 +368,20 @@ def dashboard_delivery(request):
 
     start_date = date(this_year, this_month, this_day)
     end_date = start_date + timedelta(days=+1)
-    
+
     todays_deliveries = Quote.objects.filter(
         Q(status='PARTIAL_ARRIVAL') |
-         Q( status='ARRIVED') |
-         Q( status='AWAITDELIVERY') |
-          Q(status='PARTIAL_DELIVERY') |
-          Q(status='ITEM_RELEASED'),
-        date_eta = start_date
+        Q(status='ARRIVED') |
+        Q(status='AWAITDELIVERY') |
+        Q(status='PARTIAL_DELIVERY') |
+        Q(status='ITEM_RELEASED'),
+        date_eta=start_date
     )
 
     tomorrow_deliveries_items = Quote.objects.filter(
         Q(status='PARTIAL_ARRIVAL') | Q(
             status='ARRIVED') | Q(status='PARTIAL_DELIVERY') |
-            Q(status='ITEM_RELEASED'),
+        Q(status='ITEM_RELEASED'),
         date_eta__day=end_date.day,
         date_eta__month=end_date.month,
         date_eta__year=end_date.year
@@ -666,7 +664,7 @@ def sales_dashboard(request):
         months_data.append(months_quote.count())
 
     for quote in whole_quotes:
-        if quote.status in ['PAID_DELIVER', 'AWAITDELIVERY', 'DELIVERED', 'NOTDELIVERED', 'PARTIAL_ARRIVAL', 'ITEM_RELEASED_CONFIRMED' ]:
+        if quote.status in ['PAID_DELIVER', 'AWAITDELIVERY', 'DELIVERED', 'NOTDELIVERED', 'PARTIAL_ARRIVAL', 'ITEM_RELEASED_CONFIRMED']:
             item_delivered = item_delivered + 1
             done_deals = done_deals + 1
 
@@ -689,7 +687,7 @@ def done_deals_sales(request):
     my_quotes = Quote.objects.filter(
         (Q(status='PAID_DELIVER') | Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')
          | (Q(status='DELIVERED')))
-         | (Q(status='ITEM_RELEASED_CONFIRMED')),
+        | (Q(status='ITEM_RELEASED_CONFIRMED')),
         manager=request.user,
     )
 
@@ -704,9 +702,9 @@ def done_deals_sales(request):
 @login_required
 def pending_items_sales(request):
     my_quotes = Quote.objects.filter(
-        (Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL')  | Q(status='APRSNG')
+        (Q(status='AWAITDELIVERY') | Q(status='PARTIAL_ARRIVAL') | Q(status='APRSNG')
          | (Q(status='NOTDELIVERED')))
-         | (Q(status='ITEM_RELEASED')),
+        | (Q(status='ITEM_RELEASED')),
         manager=request.user,
     )
 
@@ -733,7 +731,6 @@ def all_quotes_sales(request):
         return render(request, 'core/procurement/allquotes.html', context)
     else:
         return render(request, 'core/sales/allquotes.html', context)
-
 
 
 @login_required
@@ -781,6 +778,53 @@ class QuoteDetailView(DetailView):
 
 
 @login_required
+def extend_eta(request, pk):
+    quote = get_object_or_404(Quote, pk=pk)
+    new_eta = request.POST['new_eta']
+
+    # expected year-mm-dd
+    new_eta = parse_date(new_eta)
+    old_quote_date = str(quote.date_eta.year) + "-" + \
+        str(quote.date_eta.month) + "-" + str(quote.date_eta.day)
+
+    if quote.new_eta_set == True:
+        old_new_eta = str(quote.new_eta.year) + "-" + \
+            str(quote.new_eta.month) + "-" + str(quote.new_eta.day)
+        if parse(str(new_eta)) < parse(old_new_eta):
+            messages.error(
+                request, "Your new eta needs to be set to a future date.")
+            referer_page = request.META['HTTP_REFERER']
+            # if referer_page not None:
+            return redirect(referer_page)
+
+    if parse(str(new_eta)) > parse(old_quote_date):
+        quote.new_eta = new_eta
+        quote.new_eta_set = True
+        quote.save()
+        messages.success(request, "Quote has been modified")
+    else:
+        messages.error(
+            request, "Your new eta needs to be set to a future date.")
+
+    referer_page = request.META['HTTP_REFERER']
+    # if referer_page not None:
+    return redirect(referer_page)
+
+
+@login_required
+def edit_quote(request, pk):
+    states = State.objects.all()
+    my_quote = get_object_or_404(Quote, pk=pk)
+
+    context = {
+        'quote': my_quote,
+        'states': states,
+    }
+
+    return render(request, 'core/sales/edit_quote.html', context)
+
+
+@login_required
 def add_quotes_sales(request):
     states = State.objects.all()
     my_quotes = list(Quote.objects.filter(
@@ -811,6 +855,83 @@ class ClientView(ListView):
         context['total_quotes'] = len(my_quotes)
 
         return context
+
+
+@login_required
+@require_http_methods(['POST'])
+def edit_quote_apply(request, pk):
+    contact_name = str(request.POST.get('contact_name', None)).strip()
+    phone_one = request.POST.get('phone_one', None)
+    # company_name = request.POST.get('company_name', None)
+    email = request.POST.get('email', None)
+    delivery_type = request.POST.get('delivery_type', None)
+    delivery_location = request.POST.get('delivery_location', None)
+    delivery_state = request.POST.get('delivery_state', None)
+
+    quote_number = str(request.POST.get('quote_number', None)).strip()
+    description = request.POST.get('description', None)
+
+    # part_numbers = request.POST.getlist('part_numbers[]', [])
+    # descriptions = request.POST.getlist('descriptions[]', [])
+    # quantities = request.POST.getlist('quantities[]', [])
+    # unit_prices = request.POST.getlist('unit_prices[]', [])
+
+    quote = get_object_or_404(Quote, pk=pk)
+
+    if (
+        (delivery_type is not None and len(delivery_type) > 0) and
+        (delivery_location is not None and len(delivery_location) > 0) and
+        (quote_number is not None and len(quote_number) > 0) and
+        (contact_name is not None and len(contact_name) > 0) and
+        (phone_one is not None and len(phone_one) > 0)
+    ):
+
+        # Save the client detail
+        client = Client()
+        # client.company_name = company_name
+        client.email = email
+        client.name = contact_name
+        client.phone_one = phone_one
+        client.save()
+
+        # Store the quote
+        quote.client = client
+        quote.quote_number = quote_number
+        quote.description = description
+
+        state = 0
+        try:
+            state = State.objects.get(
+                pk=delivery_state
+            )
+        except State.DoesNotExist:
+            pass
+
+        delivery = Delivery()
+        delivery.delivery_location = delivery_location
+        delivery.delivery_type = delivery_type
+        delivery.delivery_state = state
+        delivery.save()
+
+        quote.delivery = delivery
+        quote.save()
+
+        messages.success(
+            request,
+            "Your Quote has been modified"
+        )
+
+        if(request.user.is_procurement):
+            return redirect('all_quotes_procurement')
+        else:
+            return redirect('all_quotes_sales')
+
+    else:
+        messages.error(
+            request,
+            "Please all the fields with asterisk must be filled. Thanks"
+        )
+        return redirect('edit_quote')
 
 
 @login_required

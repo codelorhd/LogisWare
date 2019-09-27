@@ -6,6 +6,7 @@ import {
 } from './components/pages'
 import EditDepartment from './components/pages/human_resource/EditDepartment';
 import DeleteDepartment from './components/pages/human_resource/DeleteDepartment';
+import RequestLeave from './components/pages/general/RequestLeave';
 
 const Routes = (mainProps) => {
     return (
@@ -20,6 +21,7 @@ const Routes = (mainProps) => {
             <Route exact path="/app/staff" component={StaffView} />
             <Route path="/app/staff/edit/:id" component={StaffEdit} />
             <Route path="/app/staff/delete/:id" component={StaffDelete} />
+            <Route path="/app/requests/leave" component={RequestLeave} />
         </Switch>
     );
 };
