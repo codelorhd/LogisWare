@@ -997,6 +997,29 @@ class ClientView(ListView):
         my_quotes = list(Quote.objects.filter(
             manager__id=self.request.user.id
         ).order_by('-date_uploaded'))
+        
+        
+        my_quotes = Quote.objects.filter(
+            manager = self.request.user
+        )
+        
+        the_clients = []
+        if self.request.user.is_authenticated == True:
+            clients = Client.objects.all()
+            for quote in my_quotes:
+                found = False
+                for picked_client in the_clients:
+                    if picked_client.email == quote.client.email:
+                        found = True
+                        break
+                if found == False:
+                    the_clients.append(quote.client)
+            
+        # print(the_clients)
+
+        context = {
+            "clients": the_clients
+        }
 
         context['total_quotes'] = len(my_quotes)
 
