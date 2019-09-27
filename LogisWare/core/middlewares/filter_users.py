@@ -16,7 +16,7 @@ class FilterUserMiddleware:
         # the view (and later middleware) are called.
 
         if str(request.path).startswith('/delivery'):
-            if request.user.is_authenticated == True and request.user.is_delivery == False:
+            if request.user.is_authenticated == True and (request.user.is_delivery == False and request.user.is_human_resource == False):
                 self.process_error_message(request)
         elif str(request.path).startswith('/sales'):
             if request.user.is_authenticated == True and request.user.is_sales == False:

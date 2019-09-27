@@ -142,6 +142,18 @@ def users_dashboard(request):
 
     return render(request, 'core/delivery/users.html', context)
 
+@login_required
+def users_dashboard_procurement(request):
+    users = get_user_model().objects.all().filter(
+        ~Q(pk=request.user.pk)
+    )
+
+    context = {
+        'users': users,
+    }
+
+    return render(request, 'core/procurement/users.html', context)
+
 
 @login_required
 @require_http_methods(['POST'])
@@ -286,6 +298,32 @@ def awaiting_deliveries(request):
 
 
 @login_required
+def days_deliveries_procurement(request, date_string):
+    reasons = ReasonNotToDeliver.objects.all()
+
+    date = parse(date_string)
+    date = date + timedelta(+1)
+
+    the_date = datetime(date.year, date.month, date.day)
+
+    total_deliveries = list(Quote.objects.filter(
+        date_eta=the_date
+    ).order_by('-date_uploaded'))
+
+    print(total_deliveries)
+
+    for delivey in total_deliveries:
+        print(delivey.date_eta.day)
+
+    context = {
+        'deliveries': total_deliveries,
+        'reasons': reasons,
+        'total_quotes': len(total_deliveries),
+    }
+
+    return render(request, 'core/procurement/all_deliveries.html', context)
+
+@login_required
 def days_deliveries(request, date_string):
     reasons = ReasonNotToDeliver.objects.all()
 
@@ -295,25 +333,9 @@ def days_deliveries(request, date_string):
     the_date = datetime(date.year, date.month, date.day)
 
     total_deliveries = list(Quote.objects.filter(
-        # (Q(status='PARTIAL_ARRIVAL') |
-        # Q(status='PARTIAL_DELIVERY') |
-        # Q(status='ARRIVED') |
-        # Q(status='AWAITDELIVERY') |
-        # Q(status='PAID_DELIVER') |
-        # Q(status='DELIVERED') |
-        # Q(status='ITEM_RELEASED_CONFIRMED') |
-        # Q(status='ITEM_RELEASED')),
         date_eta=the_date
     ).order_by('-date_uploaded'))
 
-    # total_deliveries = list(Quote.objects.filter(
-    #     # (Q(status='AWAITDELIVERY') | Q(status='DELIVERED')
-    #     #  | Q(status='PARTIAL_ARRIVAL') | Q(status='PARTIAL_DELIVERY')
-    #     #  | Q(status='NOTDELIVERED')),
-    #     date_eta__year=date.year,
-    #     date_eta__month=date.month,
-    #     date_eta__day=date.day
-    # ).order_by('-date_uploaded'))
     print(total_deliveries)
 
     for delivey in total_deliveries:
@@ -497,16 +519,6 @@ def dashboard_delivery(request):
     )
 
     all_deliverable_quotes = Quote.objects.filter(
-        # date_eta__isnull=False
-        # Q(status='PARTIAL_ARRIVAL') |
-        # Q(status='PARTIAL_DELIVERY') |
-        # Q(status='ARRIVED') |
-        # Q(status='AWAITDELIVERY') |
-        # Q(status='PAID_DELIVER') |
-        # Q(status='DELIVERED') |
-        # Q(status='ITEM_RELEASED_CONFIRMED') |
-        # Q(status='ITEM_RELEASED')
-        # if quote.status in ['PAID_DELIVER', 'AWAITDELIVERY', 'DELIVERED', 'NOTDELIVERED', 'PARTIAL_ARRIVAL']:
     )
 
     current_date = None
@@ -517,95 +529,7 @@ def dashboard_delivery(request):
     dates_worked = []
 
     deliverables_event = get_calendar_events(all_deliverable_quotes)
-
-    # for quote in all_deliverable_quotes:
-    #     print("\n" + str(quote.date_eta) )
-    #     # if date_items > 2:
-    #     #     delivery_sring = " Deliveries"
-    #     # else:
-    #     delivery_sring = " Delivery"
-
-    #     date_eta = quote.date_eta
-
-    #     day = date_eta.day
-    #     month = date_eta.month
-    #     year = date_eta.year
-
-    #     to_parse_string = str(year) + "/" + str(month) + "/" + str(day)
-
-    #     date_eta = parse(to_parse_string)
-
-    #     if quote.new_eta_set:
-    #         date_eta = quote.new_eta
-    #         day = date_eta.day
-    #         month = date_eta.month
-    #         year = date_eta.year
-    #         date_eta = parse(str(year) + "/" + str(month) + "/" + str(day))
-
-    #     # I don't know why this is, but a day was deduceted
-    #     date_eta = date_eta + timedelta(+1)
-    #     end_date_eta = date_eta + timedelta(+2)
-
-    #     day = str(date_eta.day)
-    #     if len(day) == 1:
-    #         day = "0" + day
-    #     month = str(date_eta.month)
-    #     year = str(date_eta.year)
-    #     if len(month) == 1:
-    #         month = "0" + month
-
-    #     date_format = year + "-" + month + "-" + day
-    #     end_date_format = str(end_date_eta.year) + "-" + \
-    #         str(end_date_eta.month) + "-" + str(end_date_eta.day)
-
-    #     date_string = str(date_eta.year) + "" + \
-    #         str(date_eta.month) + "" + str(date_eta.day)
-    #     color = "blue"
-
-    #     parsed_today = datetime.combine(date_eta, timezone.now().time())
-
-    #     if parsed_today > date_eta:
-    #         color = "red"
-
-    #     try:
-    #         date_items = date_items + 1
-    #         index = dates_worked.index(date_string)
-    #         item = deliverables_event[index]
-    #         new_item = {
-    #             "title": str(item["count"] + 1) + delivery_sring,
-    #             "start": item['start'],
-    #             "count": int(item["count"]) + 1,
-    #             "color": color
-    #         }
-    #         print(new_item)
-    #         print(index)
-    #         deliverables_event[index] = new_item
-    #     except ValueError as error:
-    #         date_items = 0
-
-    #         item = {
-    #             'title': str(1) + delivery_sring,
-    #             'start': date_format,
-    #             'end': end_date_format,
-    #             "count": date_items,
-    #             "color": color
-    #         }
-
-    #         deliverables_event.append(item)
-    #         current_date = date_eta
-    #         dates_worked.append(date_string)
-
-    #     # print(deliverables_event)
-
-    #     # if current_date != quote.date_eta:
-    #     #     print(current_date == quote.date_eta)
-    #     #     print(quote.date_eta)
-
-    #     #     date_items = 0
-    #     #     deliverables_event.append(item)
-    #     #     current_date = quote.date_eta
-    #     #     index = index + 1
-
+    
     import json
     deliverables_event = json.dumps(deliverables_event)
 
@@ -661,12 +585,84 @@ def dashboard_procurement(request):
     unattended_quptes = Quote.objects.filter(
         status='APRSNG'
     )
+    
+    # start 
+    
+    total_deliveries = list(Quote.objects.filter(
+        Q(status='DELIVERED') |
+        Q(status='ITEM_RELEASED_CONFIRMED'),
+        delivery__delivered_by=request.user
+    ).order_by('-date_uploaded'))
+
+    this_year = timezone.now().year
+    this_day = timezone.now().day
+    this_month = timezone.now().month
+
+    start_date = date(this_year, this_month, this_day)
+    end_date = start_date + timedelta(days=+1)
+
+    todays_deliveries = Quote.objects.filter(
+        Q(status='PARTIAL_ARRIVAL') |
+        Q(status='ARRIVED') |
+        Q(status='AWAITDELIVERY') |
+        Q(status='PARTIAL_DELIVERY') |
+        Q(status='ITEM_RELEASED'),
+        date_eta=start_date
+    )
+
+    tomorrow_deliveries_items = Quote.objects.filter(
+        Q(status='PARTIAL_ARRIVAL') | Q(
+            status='ARRIVED') | Q(status='PARTIAL_DELIVERY') |
+        Q(status='ITEM_RELEASED'),
+        date_eta__day=end_date.day,
+        date_eta__month=end_date.month,
+        date_eta__year=end_date.year
+    )
+
+    # Any quote that has arrived is automatically
+    # waiting to be delivered
+
+    awaiting_delivery_quotes = Quote.objects.filter(
+        Q(status='PARTIAL_ARRIVAL') | Q(
+            status='PARTIAL_DELIVERY') | Q(status='ARRIVED')
+        | Q(status='AWAITDELIVERY')
+        | Q(status='ITEM_RELEASED')
+    )
+
+    # print(awaiting_delivery_quotes)
+
+    unattended_quptes = Quote.objects.filter(
+        status='NOTDELIVERED'
+    )
+
+    all_deliverable_quotes = Quote.objects.filter(
+    )
+
+    current_date = None
+    deliverables = []
+    deliverables_event = []
+    index = -1
+    date_items = 0
+    dates_worked = []
+
+    deliverables_event = get_calendar_events(all_deliverable_quotes)
+    
+    import json
+    deliverables_event = json.dumps(deliverables_event)
 
     context = {
-        'total_quotes': len(my_quotes),
-        'todays_quotes': todays_quotes.count(),
-        'awaiting_arrival_quotes': awaiting_arrival_quotes.count(),
+        'now': timezone.now(),
+        'tomorrow': end_date,
+        'total_deliveries': len(total_deliveries),
+        'deliverables': deliverables_event,
+        'todays_deliveries_items': todays_deliveries,
+        'tomorrow_deliveries_items': tomorrow_deliveries_items,
+        'todays_deliveries': todays_deliveries.count(),
+        'awaiting_arrival_quotes': awaiting_delivery_quotes.count(),
         'unattended_quptes': unattended_quptes.count(),
+
+        'total_quotes': len(my_quotes),
+        'todays_quotes': todays_quotes.count()
     }
 
     return render(request, 'core/procurement/dashboard.html', context)
@@ -693,6 +689,7 @@ def awaiting_arrival_quotes(request):
     awaiting_arrival_quotes = Quote.objects.filter(
         status='AWAARIVAL'
     )
+    
     context = {
         'quotes': awaiting_arrival_quotes,
         'total_quotes': len(awaiting_arrival_quotes),

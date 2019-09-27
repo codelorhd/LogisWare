@@ -74,9 +74,12 @@ urlpatterns = [
          name='add_quotes_procurement'),
     path('procurement/quotes', core_views.all_quotes_sales,
          name='all_quotes_procurement'),
+    path('procurement/users', core_views.users_dashboard_procurement, name='users_dashboard_procurement'),
 
     path('delivery', core_views.dashboard_delivery, name='dashboard_delivery'),
 
+    path('delivery/days_deliveries/<str:date_string>',
+         core_views.days_deliveries_procurement, name='days_deliveries_procurement'),
     path('delivery/days_deliveries/<str:date_string>',
          core_views.days_deliveries, name='days_deliveries'),
     path('delivery/awaiting_deliveries',
