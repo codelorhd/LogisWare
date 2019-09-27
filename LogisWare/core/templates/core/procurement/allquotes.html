@@ -99,9 +99,27 @@
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" data-toggle="modal" data-target="#view-quote{{ quote.id }}"
               href="#view-quote{{ quote.id }}">View Quote</a>
-              
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'PRSNG' %}">Status: Processing</a>
+            <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'AWAARIVAL' %}">Status: Awaiting
+              Delivery</a>
+            <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'PARTIAL_ARRIVAL' %}">Status:
+              Partial Arrival</a>
+            <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'ARRIVED' %}">Status: Items
+              Arrived</a> 
+              {% if quote.status != 'ITEM_RELEASED' and quote.status != 'DELIVERED' %}
+                <hr />
+                <a class="dropdown-item" href="{% url 'update_quote_procurement' quote.id 'ITEM_RELEASED' %}">Status: Items
+                  Released</a>
+              {% endif %}
+              {% if quote.manager == user %}
+                <hr />
+                <a class="dropdown-item" href="{% url 'edit_quote_procurements' quote.id %}">Edit Quote</a>
+              {% endif %}
           </div>
         </div>
+
+
       </td>
 
       <!-- Modal -->

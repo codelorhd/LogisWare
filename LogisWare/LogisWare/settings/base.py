@@ -70,7 +70,7 @@ ROOT_URLCONF = 'LogisWare.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -183,7 +183,7 @@ USE_TZ = True
 # DEFAULT_FROM_EMAIL = "chertlogisware@gmail.com"
 
 EMAIL_HOST_USER = "logiswarechert@gmail.com"
-EMAIL_HOST_PASSWORD = 'logisware2019'
+EMAIL_HOST_PASSWORD = 'che28282813jdj28(02-1'
 DEFAULT_FROM_EMAIL = "logiswarechert@gmail.com"
 
 # DJANGO AXES: For Password Policy

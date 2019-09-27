@@ -24,6 +24,9 @@ class FilterUserMiddleware:
         elif str(request.path).startswith("/procurement"):
             if request.user.is_authenticated == True and request.user.is_procurement == False:
                 self.process_error_message(request)
+        elif str(request.path).startswith("/human/resource/"):
+            if request.user.is_authenticated == True and request.user.is_human_resource == False:
+                self.process_error_message(request)
 
         # Code to be executed for each request/response after
         # the view is called.

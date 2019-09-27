@@ -39,6 +39,8 @@ urlpatterns = [
     path('quotes/remove/<int:pk>/<int:qid>',
          core_views.delete_quote_item, name='remove_quotes_items_sales'),
     path('clients', core_views.ClientView.as_view(), name='my_clients_sales'),
+    
+    path('human/resource/clients', core_views.AllClientView.as_view(), name='all_clients'),
 
 
     path('quotes/modify/<int:pk>',
@@ -53,6 +55,7 @@ urlpatterns = [
     path('quotes/pending', core_views.pending_items_sales,
          name='pending_items_sales'),
 
+    path('procurements/edit/<int:pk>', core_views.edit_quote, name='edit_quote_procurements'),
     path('procurements/unattended/quotes', core_views.unattended_quptes,
          name='unattended_quptes'),
     path('procurements/awaiting/quotes', core_views.awaiting_arrival_quotes,

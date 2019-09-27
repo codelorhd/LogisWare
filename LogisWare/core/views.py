@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.parser import parse
 from django.utils.dateparse import parse_date
 from django.db.models import Q
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
 
 
 from django.utils.crypto import get_random_string
@@ -295,15 +295,16 @@ def days_deliveries(request, date_string):
     the_date = datetime(date.year, date.month, date.day)
 
     total_deliveries = list(Quote.objects.filter(
-        (Q(status='PARTIAL_ARRIVAL') |
-         Q(status='PARTIAL_DELIVERY') |
-         Q(status='ARRIVED') |
-         Q(status='AWAITDELIVERY') |
-         Q(status='PAID_DELIVER') |
-         Q(status='DELIVERED')),
-        Q(status='ITEM_RELEASED')),
-        Q(status='ITEM_RELEASED_CONFIRMED')
-    ).order_by('-date_uploaded')
+        # (Q(status='PARTIAL_ARRIVAL') |
+        # Q(status='PARTIAL_DELIVERY') |
+        # Q(status='ARRIVED') |
+        # Q(status='AWAITDELIVERY') |
+        # Q(status='PAID_DELIVER') |
+        # Q(status='DELIVERED') |
+        # Q(status='ITEM_RELEASED_CONFIRMED') |
+        # Q(status='ITEM_RELEASED')),
+        date_eta=the_date
+    ).order_by('-date_uploaded'))
 
     # total_deliveries = list(Quote.objects.filter(
     #     # (Q(status='AWAITDELIVERY') | Q(status='DELIVERED')
@@ -351,16 +352,108 @@ def all_deliveries(request):
         return render(request, 'core/delivery/alldeliveries.html', context)
 
 
+def get_calendar_events(quotes):
+    # Loop through all the quote
+    # Get the first date's quote and keep that date in a array
+    # Go on and keep increasing the value of each date's by 1
+
+    output = {}
+
+    for quote in quotes:
+        date_eta = quote.date_eta
+
+        # // hmmm, I don't know why
+        date_eta = date_eta + timedelta(+1)
+        end_date_eta = date_eta + timedelta(+2)
+
+        day = str(quote.date_eta.day)
+        if len(day) == 1:
+            day = "0" + day
+
+        month = str(quote.date_eta.month)
+        year = str(quote.date_eta.year)
+        if len(month) == 1:
+            month = "0" + month
+
+        date_string = str(year) + "/" + str(month) + "/" + str(day)
+        parsed_date = parse(date_string)
+        # print(date_string)
+
+        try:
+            output[date_string]
+            output[date_string] = int(output[date_string]) + 1
+        except KeyError as identifier:
+            output[date_string] = 1
+        
+        # print(output)
+
+    delivery_sring = " Delivery"
+    final_output = []
+    for data in output:
+        delivery_sring = " Delivery"
+        if output[data] > 1:
+            delivery_sring = " Deliveries"
+            
+        
+        parsed_date = parse(str(data))
+        # // hmmm, I don't know why
+        date_eta = parsed_date + timedelta(+1)
+        end_date_eta = parsed_date + timedelta(+2)
+        
+        print(parsed_date)
+
+        day = str(date_eta.day)
+        if len(day) == 1:
+            day = "0" + day
+
+        month = str(date_eta.month)
+        year = str(date_eta.year)
+        if len(month) == 1:
+            month = "0" + month
+
+        date_format = year + "-" + month + "-" + day
+        end_date_format = str(end_date_eta.year) + "-" + \
+            str(end_date_eta.month) + "-" + str(end_date_eta.day)
+            
+        
+
+        item = {
+            'title': str(output[data]) + delivery_sring,
+            'start': date_format,
+            'end': end_date_format,
+            "count": output[data],
+            "color": "darkblue"
+        }
+        final_output.append(item)
+
+    return final_output
+
+        # # I don't know why this is, but a day was deduceted
+        # date_eta = date_eta + timedelta(+1)
+        # end_date_eta = date_eta + timedelta(+2)
+
+        # date_format = year + "-" + month + "-" + day
+        # end_date_format = str(end_date_eta.year) + "-" + \
+        #     str(end_date_eta.month) + "-" + str(end_date_eta.day)
+
+        #     item = {
+        #         'title': str(1) + delivery_sring,
+        #         'start': date_format,
+        #         'end': end_date_format,
+        #         "count": date_items,
+        #         "color": "red"
+        #     }
+
+
 @login_required
 def dashboard_delivery(request):
+    from datetime import datetime
 
     total_deliveries = list(Quote.objects.filter(
         Q(status='DELIVERED') |
         Q(status='ITEM_RELEASED_CONFIRMED'),
         delivery__delivered_by=request.user
     ).order_by('-date_uploaded'))
-
-    print(total_deliveries)
 
     this_year = timezone.now().year
     this_day = timezone.now().day
@@ -397,7 +490,7 @@ def dashboard_delivery(request):
         | Q(status='ITEM_RELEASED')
     )
 
-    print(awaiting_delivery_quotes)
+    # print(awaiting_delivery_quotes)
 
     unattended_quptes = Quote.objects.filter(
         status='NOTDELIVERED'
@@ -405,14 +498,14 @@ def dashboard_delivery(request):
 
     all_deliverable_quotes = Quote.objects.filter(
         # date_eta__isnull=False
-        Q(status='PARTIAL_ARRIVAL') |
-        Q(status='PARTIAL_DELIVERY') |
-        Q(status='ARRIVED') |
-        Q(status='AWAITDELIVERY') |
-        Q(status='PAID_DELIVER') |
-        Q(status='DELIVERED') |
-        Q(status='ITEM_RELEASED_CONFIRMED') |
-        Q(status='ITEM_RELEASED')
+        # Q(status='PARTIAL_ARRIVAL') |
+        # Q(status='PARTIAL_DELIVERY') |
+        # Q(status='ARRIVED') |
+        # Q(status='AWAITDELIVERY') |
+        # Q(status='PAID_DELIVER') |
+        # Q(status='DELIVERED') |
+        # Q(status='ITEM_RELEASED_CONFIRMED') |
+        # Q(status='ITEM_RELEASED')
         # if quote.status in ['PAID_DELIVER', 'AWAITDELIVERY', 'DELIVERED', 'NOTDELIVERED', 'PARTIAL_ARRIVAL']:
     )
 
@@ -421,71 +514,97 @@ def dashboard_delivery(request):
     deliverables_event = []
     index = -1
     date_items = 0
-    item = {}
     dates_worked = []
-    for quote in all_deliverable_quotes:
-        date_items = date_items + 1
-        # if date_items > 2:
-        #     delivery_sring = " Deliveries"
-        # else:
-        delivery_sring = " Delivery"
 
-        # I don't know why this is, but a day was deduceted
-        date_eta = quote.date_eta + timedelta(+1)
-        end_date_eta = quote.date_eta + timedelta(+2)
+    deliverables_event = get_calendar_events(all_deliverable_quotes)
 
-        day = str(date_eta.day)
-        if len(day) == 1:
-            day = "0" + day
-        month = str(date_eta.month)
-        year = str(date_eta.year)
-        if len(month) == 1:
-            month = "0" + month
+    # for quote in all_deliverable_quotes:
+    #     print("\n" + str(quote.date_eta) )
+    #     # if date_items > 2:
+    #     #     delivery_sring = " Deliveries"
+    #     # else:
+    #     delivery_sring = " Delivery"
 
-        date_format = year + "-" + month + "-" + day
-        end_date_format = str(end_date_eta.year) + "-" + \
-            str(end_date_eta.month) + "-" + str(end_date_eta.day)
+    #     date_eta = quote.date_eta
 
-        date_string = str(date_eta.year) + "" + \
-            str(date_eta.month) + "" + str(date_eta.day)
-        color = "blue"
-        if timezone.now() > date_eta:
-            color = "red"
+    #     day = date_eta.day
+    #     month = date_eta.month
+    #     year = date_eta.year
 
-        try:
-            index = dates_worked.index(date_string)
-            item = deliverables_event[index]
-            new_item = {
-                "title": str(item["count"] + 1) + delivery_sring,
-                "start": item['start'],
-                "count": item["count"] + 1,
-                "color": color
-            }
-            deliverables_event[index] = new_item
-        except ValueError:
+    #     to_parse_string = str(year) + "/" + str(month) + "/" + str(day)
 
-            item = {
-                'title': str(1) + delivery_sring,
-                'start': date_format,
-                'end': end_date_format,
-                "count": date_items,
-                "color": color
-            }
+    #     date_eta = parse(to_parse_string)
 
-            deliverables_event.append(item)
-            current_date = date_eta
-            dates_worked.append(date_string)
+    #     if quote.new_eta_set:
+    #         date_eta = quote.new_eta
+    #         day = date_eta.day
+    #         month = date_eta.month
+    #         year = date_eta.year
+    #         date_eta = parse(str(year) + "/" + str(month) + "/" + str(day))
 
-        # print(deliverables_event)
+    #     # I don't know why this is, but a day was deduceted
+    #     date_eta = date_eta + timedelta(+1)
+    #     end_date_eta = date_eta + timedelta(+2)
 
-        # if current_date != quote.date_eta:
-        #     print(current_date == quote.date_eta)
-        #     print(quote.date_eta)
+    #     day = str(date_eta.day)
+    #     if len(day) == 1:
+    #         day = "0" + day
+    #     month = str(date_eta.month)
+    #     year = str(date_eta.year)
+    #     if len(month) == 1:
+    #         month = "0" + month
 
-        #     date_items = 0
-        #     deliverables_event.append(item)
-        #     current_date = quote.date_eta
-        #     index = index + 1
+    #     date_format = year + "-" + month + "-" + day
+    #     end_date_format = str(end_date_eta.year) + "-" + \
+    #         str(end_date_eta.month) + "-" + str(end_date_eta.day)
+
+    #     date_string = str(date_eta.year) + "" + \
+    #         str(date_eta.month) + "" + str(date_eta.day)
+    #     color = "blue"
+
+    #     parsed_today = datetime.combine(date_eta, timezone.now().time())
+
+    #     if parsed_today > date_eta:
+    #         color = "red"
+
+    #     try:
+    #         date_items = date_items + 1
+    #         index = dates_worked.index(date_string)
+    #         item = deliverables_event[index]
+    #         new_item = {
+    #             "title": str(item["count"] + 1) + delivery_sring,
+    #             "start": item['start'],
+    #             "count": int(item["count"]) + 1,
+    #             "color": color
+    #         }
+    #         print(new_item)
+    #         print(index)
+    #         deliverables_event[index] = new_item
+    #     except ValueError as error:
+    #         date_items = 0
+
+    #         item = {
+    #             'title': str(1) + delivery_sring,
+    #             'start': date_format,
+    #             'end': end_date_format,
+    #             "count": date_items,
+    #             "color": color
+    #         }
+
+    #         deliverables_event.append(item)
+    #         current_date = date_eta
+    #         dates_worked.append(date_string)
+
+    #     # print(deliverables_event)
+
+    #     # if current_date != quote.date_eta:
+    #     #     print(current_date == quote.date_eta)
+    #     #     print(quote.date_eta)
+
+    #     #     date_items = 0
+    #     #     deliverables_event.append(item)
+    #     #     current_date = quote.date_eta
+    #     #     index = index + 1
 
     import json
     deliverables_event = json.dumps(deliverables_event)
@@ -838,6 +957,33 @@ def add_quotes_sales(request):
     }
 
     return render(request, 'core/sales/addquote.html', context)
+
+
+class AllClientView(ListView):
+    model = Client
+    template_name = 'core/procurement/all_clients.html'
+    context_object_name = 'clients'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        the_clients = []
+        if self.request.user.is_authenticated == True:
+            clients = Client.objects.all()
+            for client in clients:
+                found = False
+                for picked_client in the_clients:
+                    if picked_client.email == client.email:
+                        found = True
+                        break
+                if found == False:
+                    the_clients.append(client)
+
+        context = {
+            "clients": the_clients
+        }
+
+        return context
 
 
 class ClientView(ListView):
