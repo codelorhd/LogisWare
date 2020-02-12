@@ -1,5 +1,5 @@
 autopep8==1.4.4
-Django==2.2.3
+Django==2.2.10
 django-appconf==1.0.3
 django-axes==5.0.13
 django-common-helpers==0.9.2
