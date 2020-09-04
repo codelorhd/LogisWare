@@ -22,7 +22,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "css-loader": "^3.2.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "progress-bar-webpack-plugin": "^1.12.1",
     "react-load-script": "0.0.6",
     "react-redux": "^7.1.0",
